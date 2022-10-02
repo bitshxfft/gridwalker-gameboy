@@ -1,0 +1,545 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.1.6 #12539 (MINGW32)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module main
+                                      6 	.optsdcc -mgbz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _main
+                                     12 	.globl _wait_vbls_done
+                                     13 	.globl _draw_basic_font_word
+                                     14 	.globl _is_input_held
+                                     15 	.globl _was_input_released
+                                     16 	.globl _was_input_depressed
+                                     17 	.globl _update_input_state
+                                     18 	.globl _set_sprite_data
+                                     19 	.globl _wait_vbl_done
+                                     20 ;--------------------------------------------------------
+                                     21 ; special function registers
+                                     22 ;--------------------------------------------------------
+                                     23 ;--------------------------------------------------------
+                                     24 ; ram data
+                                     25 ;--------------------------------------------------------
+                                     26 	.area _DATA
+                                     27 ;--------------------------------------------------------
+                                     28 ; ram data
+                                     29 ;--------------------------------------------------------
+                                     30 	.area _INITIALIZED
+                                     31 ;--------------------------------------------------------
+                                     32 ; absolute external ram data
+                                     33 ;--------------------------------------------------------
+                                     34 	.area _DABS (ABS)
+                                     35 ;--------------------------------------------------------
+                                     36 ; global & static initialisations
+                                     37 ;--------------------------------------------------------
+                                     38 	.area _HOME
+                                     39 	.area _GSINIT
+                                     40 	.area _GSFINAL
+                                     41 	.area _GSINIT
+                                     42 ;--------------------------------------------------------
+                                     43 ; Home
+                                     44 ;--------------------------------------------------------
+                                     45 	.area _HOME
+                                     46 	.area _HOME
+                                     47 ;--------------------------------------------------------
+                                     48 ; code
+                                     49 ;--------------------------------------------------------
+                                     50 	.area _CODE
+                                     51 ;input.h:33: void update_input_state(struct input_state* is, uint8_t button_state)
+                                     52 ;	---------------------------------
+                                     53 ; Function update_input_state
+                                     54 ; ---------------------------------
+      000000                         55 _update_input_state::
+      000000 E8 FB                   56 	add	sp, #-5
+                                     57 ;input.h:36: is->previous_state = is->current_state;
+      000002 F8 07                   58 	ldhl	sp,	#7
+      000004 7E                      59 	ld	a, (hl)
+      000005 F8 00                   60 	ldhl	sp,	#0
+      000007 77                      61 	ld	(hl), a
+      000008 F8 08                   62 	ldhl	sp,	#8
+      00000A 7E                      63 	ld	a, (hl)
+      00000B F8 01                   64 	ldhl	sp,	#1
+      00000D 22                      65 	ld	(hl+), a
+      00000E C1                      66 	pop	bc
+      00000F C5                      67 	push	bc
+      000010 03                      68 	inc	bc
+      000011 0A                      69 	ld	a, (bc)
+      000012 77                      70 	ld	(hl), a
+      000013 D1                      71 	pop	de
+      000014 D5                      72 	push	de
+      000015 7E                      73 	ld	a, (hl)
+      000016 12                      74 	ld	(de), a
+                                     75 ;input.h:39: is->current_state = ((button_state & J_A) == J_A) << btn_a;
+      000017 F8 09                   76 	ldhl	sp,	#9
+      000019 7E                      77 	ld	a, (hl)
+      00001A F8 03                   78 	ldhl	sp,	#3
+      00001C 22                      79 	ld	(hl+), a
+      00001D AF                      80 	xor	a, a
+      00001E 32                      81 	ld	(hl-), a
+      00001F 7E                      82 	ld	a, (hl)
+      000020 E6 10                   83 	and	a, #0x10
+      000022 5F                      84 	ld	e, a
+      000023 16 00                   85 	ld	d, #0x00
+      000025 7B                      86 	ld	a, e
+      000026 D6 10                   87 	sub	a, #0x10
+      000028 B2                      88 	or	a, d
+      000029 3E 01                   89 	ld	a, #0x01
+      00002B 28 01                   90 	jr	Z, 00104$
+      00002D AF                      91 	xor	a, a
+      00002E                         92 00104$:
+                                     93 ;input.h:40: is->current_state |= ((button_state & J_B) == J_B) << btn_b;
+      00002E 02                      94 	ld	(bc), a
+      00002F 5F                      95 	ld	e, a
+      000030 F8 03                   96 	ldhl	sp,	#3
+      000032 7E                      97 	ld	a, (hl)
+      000033 E6 20                   98 	and	a, #0x20
+                                     99 ;	spillPairReg hl
+                                    100 ;	spillPairReg hl
+      000035 2E 00                  101 	ld	l, #0x00
+      000037 D6 20                  102 	sub	a, #0x20
+      000039 B5                     103 	or	a, l
+      00003A 3E 01                  104 	ld	a, #0x01
+      00003C 28 01                  105 	jr	Z, 00106$
+      00003E AF                     106 	xor	a, a
+      00003F                        107 00106$:
+      00003F 87                     108 	add	a, a
+      000040 B3                     109 	or	a, e
+      000041 5F                     110 	ld	e, a
+      000042 02                     111 	ld	(bc), a
+                                    112 ;input.h:41: is->current_state |= ((button_state & J_UP) == J_UP) << btn_up;
+      000043 F8 03                  113 	ldhl	sp,	#3
+      000045 7E                     114 	ld	a, (hl)
+      000046 E6 04                  115 	and	a, #0x04
+                                    116 ;	spillPairReg hl
+                                    117 ;	spillPairReg hl
+      000048 2E 00                  118 	ld	l, #0x00
+      00004A D6 04                  119 	sub	a, #0x04
+      00004C B5                     120 	or	a, l
+      00004D 3E 01                  121 	ld	a, #0x01
+      00004F 28 01                  122 	jr	Z, 00108$
+      000051 AF                     123 	xor	a, a
+      000052                        124 00108$:
+      000052 87                     125 	add	a, a
+      000053 87                     126 	add	a, a
+      000054 B3                     127 	or	a, e
+      000055 5F                     128 	ld	e, a
+      000056 02                     129 	ld	(bc), a
+                                    130 ;input.h:42: is->current_state |= ((button_state & J_DOWN) == J_DOWN) << btn_down;
+      000057 F8 03                  131 	ldhl	sp,	#3
+      000059 7E                     132 	ld	a, (hl)
+      00005A E6 08                  133 	and	a, #0x08
+                                    134 ;	spillPairReg hl
+                                    135 ;	spillPairReg hl
+      00005C 2E 00                  136 	ld	l, #0x00
+      00005E D6 08                  137 	sub	a, #0x08
+      000060 B5                     138 	or	a, l
+      000061 3E 01                  139 	ld	a, #0x01
+      000063 28 01                  140 	jr	Z, 00110$
+      000065 AF                     141 	xor	a, a
+      000066                        142 00110$:
+      000066 87                     143 	add	a, a
+      000067 87                     144 	add	a, a
+      000068 87                     145 	add	a, a
+      000069 B3                     146 	or	a, e
+      00006A 5F                     147 	ld	e, a
+      00006B 02                     148 	ld	(bc), a
+                                    149 ;input.h:43: is->current_state |= ((button_state & J_LEFT) == J_LEFT) << btn_left;
+      00006C F8 03                  150 	ldhl	sp,	#3
+      00006E 7E                     151 	ld	a, (hl)
+      00006F E6 02                  152 	and	a, #0x02
+                                    153 ;	spillPairReg hl
+                                    154 ;	spillPairReg hl
+      000071 2E 00                  155 	ld	l, #0x00
+      000073 D6 02                  156 	sub	a, #0x02
+      000075 B5                     157 	or	a, l
+      000076 3E 01                  158 	ld	a, #0x01
+      000078 28 01                  159 	jr	Z, 00112$
+      00007A AF                     160 	xor	a, a
+      00007B                        161 00112$:
+      00007B CB 37                  162 	swap	a
+      00007D E6 F0                  163 	and	a, #0xf0
+      00007F B3                     164 	or	a, e
+      000080 5F                     165 	ld	e, a
+      000081 02                     166 	ld	(bc), a
+                                    167 ;input.h:44: is->current_state |= ((button_state & J_RIGHT) == J_RIGHT) << btn_right;
+      000082 F8 03                  168 	ldhl	sp,	#3
+      000084 7E                     169 	ld	a, (hl)
+      000085 E6 01                  170 	and	a, #0x01
+                                    171 ;	spillPairReg hl
+                                    172 ;	spillPairReg hl
+      000087 2E 00                  173 	ld	l, #0x00
+      000089 3D                     174 	dec	a
+      00008A B5                     175 	or	a, l
+      00008B 3E 01                  176 	ld	a, #0x01
+      00008D 28 01                  177 	jr	Z, 00114$
+      00008F AF                     178 	xor	a, a
+      000090                        179 00114$:
+      000090 CB 37                  180 	swap	a
+      000092 07                     181 	rlca
+      000093 E6 E0                  182 	and	a, #0xe0
+      000095 B3                     183 	or	a, e
+      000096 5F                     184 	ld	e, a
+      000097 02                     185 	ld	(bc), a
+                                    186 ;input.h:45: is->current_state |= ((button_state & J_START) == J_START) << btn_start;
+      000098 F8 03                  187 	ldhl	sp,	#3
+      00009A 7E                     188 	ld	a, (hl)
+      00009B E6 80                  189 	and	a, #0x80
+                                    190 ;	spillPairReg hl
+                                    191 ;	spillPairReg hl
+      00009D 2E 00                  192 	ld	l, #0x00
+      00009F D6 80                  193 	sub	a, #0x80
+      0000A1 B5                     194 	or	a, l
+      0000A2 3E 01                  195 	ld	a, #0x01
+      0000A4 28 01                  196 	jr	Z, 00116$
+      0000A6 AF                     197 	xor	a, a
+      0000A7                        198 00116$:
+      0000A7 0F                     199 	rrca
+      0000A8 0F                     200 	rrca
+      0000A9 E6 C0                  201 	and	a, #0xc0
+      0000AB B3                     202 	or	a, e
+      0000AC 5F                     203 	ld	e, a
+      0000AD 02                     204 	ld	(bc), a
+                                    205 ;input.h:46: is->current_state |= ((button_state & J_SELECT) == J_SELECT) << btn_select;
+      0000AE F8 03                  206 	ldhl	sp,	#3
+      0000B0 7E                     207 	ld	a, (hl)
+      0000B1 E6 40                  208 	and	a, #0x40
+                                    209 ;	spillPairReg hl
+                                    210 ;	spillPairReg hl
+      0000B3 2E 00                  211 	ld	l, #0x00
+      0000B5 D6 40                  212 	sub	a, #0x40
+      0000B7 B5                     213 	or	a, l
+      0000B8 3E 01                  214 	ld	a, #0x01
+      0000BA 28 01                  215 	jr	Z, 00118$
+      0000BC AF                     216 	xor	a, a
+      0000BD                        217 00118$:
+      0000BD 0F                     218 	rrca
+      0000BE E6 80                  219 	and	a, #0x80
+      0000C0 B3                     220 	or	a, e
+      0000C1 57                     221 	ld	d, a
+      0000C2 02                     222 	ld	(bc), a
+                                    223 ;input.h:49: is->held_buttons = is->previous_state & is->current_state;
+      0000C3 C1                     224 	pop	bc
+      0000C4 C5                     225 	push	bc
+      0000C5 03                     226 	inc	bc
+      0000C6 03                     227 	inc	bc
+      0000C7 F8 02                  228 	ldhl	sp,	#2
+                                    229 ;input.h:52: is->depressed_buttons = (is->current_state ^ is->held_buttons);
+                                    230 ;input.h:55: is->released_buttons = (is->previous_state ^ is->held_buttons);
+      0000C9 3A                     231 	ld	a, (hl-)
+      0000CA 2B                     232 	dec	hl
+      0000CB A2                     233 	and	a, d
+      0000CC 5F                     234 	ld	e, a
+      0000CD 02                     235 	ld	(bc), a
+      0000CE C1                     236 	pop	bc
+      0000CF C5                     237 	push	bc
+      0000D0 03                     238 	inc	bc
+      0000D1 03                     239 	inc	bc
+      0000D2 03                     240 	inc	bc
+      0000D3 7A                     241 	ld	a, d
+      0000D4 AB                     242 	xor	a, e
+      0000D5 02                     243 	ld	(bc), a
+      0000D6 D5                     244 	push	de
+      0000D7 2A                     245 	ld	a, (hl+)
+      0000D8 5F                     246 	ld	e, a
+      0000D9 56                     247 	ld	d, (hl)
+      0000DA 21 04 00               248 	ld	hl, #0x0004
+      0000DD 19                     249 	add	hl, de
+      0000DE D1                     250 	pop	de
+      0000DF 4D                     251 	ld	c, l
+      0000E0 44                     252 	ld	b, h
+      0000E1 F8 02                  253 	ldhl	sp,	#2
+      0000E3 7E                     254 	ld	a, (hl)
+      0000E4 AB                     255 	xor	a, e
+      0000E5 02                     256 	ld	(bc), a
+                                    257 ;input.h:56: }
+      0000E6 E8 05                  258 	add	sp, #5
+      0000E8 C9                     259 	ret
+      0000E9                        260 _SCREEN_MIN_X:
+      0000E9 08                     261 	.db #0x08	; 8
+      0000EA                        262 _SCREEN_MIN_Y:
+      0000EA 10                     263 	.db #0x10	; 16
+      0000EB                        264 _SCREEN_WIDTH:
+      0000EB A0                     265 	.db #0xa0	; 160
+      0000EC                        266 _SCREEN_HEIGHT:
+      0000EC 90                     267 	.db #0x90	; 144
+      0000ED                        268 _SPRITE_TILE_WIDTH:
+      0000ED 08                     269 	.db #0x08	; 8
+      0000EE                        270 _SPRITE_TILE_HEIGHT:
+      0000EE 08                     271 	.db #0x08	; 8
+                                    272 ;input.h:60: uint8_t was_input_depressed(struct input_state* is, uint8_t button)
+                                    273 ;	---------------------------------
+                                    274 ; Function was_input_depressed
+                                    275 ; ---------------------------------
+      0000EF                        276 _was_input_depressed::
+                                    277 ;input.h:62: return (is->depressed_buttons & (1 << button)) != 0x00;
+      0000EF F8 02                  278 	ldhl	sp,	#2
+      0000F1 2A                     279 	ld	a, (hl+)
+      0000F2 4F                     280 	ld	c, a
+      0000F3 2A                     281 	ld	a, (hl+)
+      0000F4 47                     282 	ld	b, a
+      0000F5 03                     283 	inc	bc
+      0000F6 03                     284 	inc	bc
+      0000F7 03                     285 	inc	bc
+      0000F8 0A                     286 	ld	a, (bc)
+      0000F9 4E                     287 	ld	c, (hl)
+      0000FA 21 01 00               288 	ld	hl, #0x0001
+      0000FD 0C                     289 	inc	c
+      0000FE 18 01                  290 	jr	00104$
+      000100                        291 00103$:
+      000100 29                     292 	add	hl, hl
+      000101                        293 00104$:
+      000101 0D                     294 	dec	c
+      000102 20 FC                  295 	jr	NZ,00103$
+      000104 0E 00                  296 	ld	c, #0x00
+      000106 A5                     297 	and	a, l
+      000107 5F                     298 	ld	e, a
+      000108 79                     299 	ld	a, c
+      000109 A4                     300 	and	a, h
+      00010A B3                     301 	or	a, e
+      00010B D6 01                  302 	sub	a,#0x01
+      00010D 3E 00                  303 	ld	a, #0x00
+      00010F 17                     304 	rla
+      000110 EE 01                  305 	xor	a, #0x01
+      000112 5F                     306 	ld	e, a
+                                    307 ;input.h:63: }
+      000113 C9                     308 	ret
+                                    309 ;input.h:65: uint8_t was_input_released(struct input_state* is, uint8_t button)
+                                    310 ;	---------------------------------
+                                    311 ; Function was_input_released
+                                    312 ; ---------------------------------
+      000114                        313 _was_input_released::
+                                    314 ;input.h:67: return (is->released_buttons & (1 << button)) != 0x00;
+      000114 F8 02                  315 	ldhl	sp,	#2
+      000116 2A                     316 	ld	a, (hl+)
+      000117 4F                     317 	ld	c, a
+      000118 2A                     318 	ld	a, (hl+)
+      000119 47                     319 	ld	b, a
+      00011A 03                     320 	inc	bc
+      00011B 03                     321 	inc	bc
+      00011C 03                     322 	inc	bc
+      00011D 03                     323 	inc	bc
+      00011E 0A                     324 	ld	a, (bc)
+      00011F 4E                     325 	ld	c, (hl)
+      000120 21 01 00               326 	ld	hl, #0x0001
+      000123 0C                     327 	inc	c
+      000124 18 01                  328 	jr	00104$
+      000126                        329 00103$:
+      000126 29                     330 	add	hl, hl
+      000127                        331 00104$:
+      000127 0D                     332 	dec	c
+      000128 20 FC                  333 	jr	NZ,00103$
+      00012A 0E 00                  334 	ld	c, #0x00
+      00012C A5                     335 	and	a, l
+      00012D 5F                     336 	ld	e, a
+      00012E 79                     337 	ld	a, c
+      00012F A4                     338 	and	a, h
+      000130 B3                     339 	or	a, e
+      000131 D6 01                  340 	sub	a,#0x01
+      000133 3E 00                  341 	ld	a, #0x00
+      000135 17                     342 	rla
+      000136 EE 01                  343 	xor	a, #0x01
+      000138 5F                     344 	ld	e, a
+                                    345 ;input.h:68: }
+      000139 C9                     346 	ret
+                                    347 ;input.h:70: uint8_t is_input_held(struct input_state* is, uint8_t button)
+                                    348 ;	---------------------------------
+                                    349 ; Function is_input_held
+                                    350 ; ---------------------------------
+      00013A                        351 _is_input_held::
+                                    352 ;input.h:72: return (is->held_buttons & (1 << button)) != 0x00;
+      00013A F8 02                  353 	ldhl	sp,	#2
+      00013C 2A                     354 	ld	a, (hl+)
+      00013D 4F                     355 	ld	c, a
+      00013E 2A                     356 	ld	a, (hl+)
+      00013F 47                     357 	ld	b, a
+      000140 03                     358 	inc	bc
+      000141 03                     359 	inc	bc
+      000142 0A                     360 	ld	a, (bc)
+      000143 4E                     361 	ld	c, (hl)
+      000144 21 01 00               362 	ld	hl, #0x0001
+      000147 0C                     363 	inc	c
+      000148 18 01                  364 	jr	00104$
+      00014A                        365 00103$:
+      00014A 29                     366 	add	hl, hl
+      00014B                        367 00104$:
+      00014B 0D                     368 	dec	c
+      00014C 20 FC                  369 	jr	NZ,00103$
+      00014E 0E 00                  370 	ld	c, #0x00
+      000150 A5                     371 	and	a, l
+      000151 5F                     372 	ld	e, a
+      000152 79                     373 	ld	a, c
+      000153 A4                     374 	and	a, h
+      000154 B3                     375 	or	a, e
+      000155 D6 01                  376 	sub	a,#0x01
+      000157 3E 00                  377 	ld	a, #0x00
+      000159 17                     378 	rla
+      00015A EE 01                  379 	xor	a, #0x01
+      00015C 5F                     380 	ld	e, a
+                                    381 ;input.h:73: }
+      00015D C9                     382 	ret
+                                    383 ;utility.h:8: void wait_vbls_done(uint8_t num_loops)
+                                    384 ;	---------------------------------
+                                    385 ; Function wait_vbls_done
+                                    386 ; ---------------------------------
+      00015E                        387 _wait_vbls_done::
+                                    388 ;utility.h:10: for (uint8_t loop_counter = 0; loop_counter < num_loops; ++loop_counter)
+      00015E 0E 00                  389 	ld	c, #0x00
+      000160                        390 00103$:
+      000160 79                     391 	ld	a, c
+      000161 F8 02                  392 	ldhl	sp,	#2
+      000163 96                     393 	sub	a, (hl)
+      000164 D0                     394 	ret	NC
+                                    395 ;utility.h:12: wait_vbl_done();
+      000165 CDr00r00               396 	call	_wait_vbl_done
+                                    397 ;utility.h:10: for (uint8_t loop_counter = 0; loop_counter < num_loops; ++loop_counter)
+      000168 0C                     398 	inc	c
+                                    399 ;utility.h:14: }
+      000169 18 F5                  400 	jr	00103$
+                                    401 ;main.c:10: int main()
+                                    402 ;	---------------------------------
+                                    403 ; Function main
+                                    404 ; ---------------------------------
+      00016B                        405 _main::
+                                    406 ;main.c:13: set_sprite_data(0, 38, basic_font_sprites);
+      00016B 11r00r00               407 	ld	de, #_basic_font_sprites
+      00016E D5                     408 	push	de
+      00016F 21 00 26               409 	ld	hl, #0x2600
+      000172 E5                     410 	push	hl
+      000173 CDr00r00               411 	call	_set_sprite_data
+      000176 E8 04                  412 	add	sp, #4
+                                    413 ;main.c:20: SPRITE_TILE_WIDTH,
+      000178 21rEDr00               414 	ld	hl, #_SPRITE_TILE_WIDTH
+      00017B 46                     415 	ld	b, (hl)
+                                    416 ;main.c:19: SCREEN_MIN_Y + (3 * SPRITE_TILE_HEIGHT),
+      00017C FArEEr00               417 	ld	a, (#_SPRITE_TILE_HEIGHT)
+      00017F 5F                     418 	ld	e, a
+      000180 87                     419 	add	a, a
+      000181 83                     420 	add	a, e
+      000182 21rEAr00               421 	ld	hl, #_SCREEN_MIN_Y
+      000185 4E                     422 	ld	c, (hl)
+      000186 81                     423 	add	a, c
+      000187 4F                     424 	ld	c, a
+                                    425 ;main.c:18: SCREEN_MIN_X + (5 * SPRITE_TILE_WIDTH),
+      000188 78                     426 	ld	a, b
+      000189 5F                     427 	ld	e, a
+      00018A 87                     428 	add	a, a
+      00018B 87                     429 	add	a, a
+      00018C 83                     430 	add	a, e
+      00018D 21rE9r00               431 	ld	hl, #_SCREEN_MIN_X
+      000190 5E                     432 	ld	e, (hl)
+      000191 83                     433 	add	a, e
+      000192 5F                     434 	ld	e, a
+                                    435 ;main.c:15: draw_basic_font_word(&k_gridwalker_word_sprites[0],
+      000193 AF                     436 	xor	a, a
+      000194 F5                     437 	push	af
+      000195 33                     438 	inc	sp
+      000196 C5                     439 	push	bc
+      000197 33                     440 	inc	sp
+      000198 51                     441 	ld	d, c
+      000199 D5                     442 	push	de
+      00019A 21 0A 00               443 	ld	hl, #0x0a
+      00019D E5                     444 	push	hl
+      00019E 11r00r00               445 	ld	de, #_k_gridwalker_word_sprites
+      0001A1 D5                     446 	push	de
+      0001A2 CDr00r00               447 	call	_draw_basic_font_word
+      0001A5 E8 08                  448 	add	sp, #8
+                                    449 ;main.c:28: SPRITE_TILE_WIDTH,
+      0001A7 21rEDr00               450 	ld	hl, #_SPRITE_TILE_WIDTH
+      0001AA 46                     451 	ld	b, (hl)
+                                    452 ;main.c:27: SCREEN_MIN_Y + (10 * SPRITE_TILE_HEIGHT),
+      0001AB FArEEr00               453 	ld	a, (#_SPRITE_TILE_HEIGHT)
+      0001AE 5F                     454 	ld	e, a
+      0001AF 87                     455 	add	a, a
+      0001B0 87                     456 	add	a, a
+      0001B1 83                     457 	add	a, e
+      0001B2 87                     458 	add	a, a
+      0001B3 21rEAr00               459 	ld	hl, #_SCREEN_MIN_Y
+      0001B6 4E                     460 	ld	c, (hl)
+      0001B7 81                     461 	add	a, c
+      0001B8 4F                     462 	ld	c, a
+                                    463 ;main.c:26: SCREEN_MIN_X + (6 * SPRITE_TILE_WIDTH),
+      0001B9 78                     464 	ld	a, b
+      0001BA 5F                     465 	ld	e, a
+      0001BB 87                     466 	add	a, a
+      0001BC 83                     467 	add	a, e
+      0001BD 87                     468 	add	a, a
+      0001BE 21rE9r00               469 	ld	hl, #_SCREEN_MIN_X
+      0001C1 5E                     470 	ld	e, (hl)
+      0001C2 83                     471 	add	a, e
+      0001C3 5F                     472 	ld	e, a
+                                    473 ;main.c:23: draw_basic_font_word(&k_new_game_word_sprites[0],
+      0001C4 AF                     474 	xor	a, a
+      0001C5 F5                     475 	push	af
+      0001C6 33                     476 	inc	sp
+      0001C7 C5                     477 	push	bc
+      0001C8 33                     478 	inc	sp
+      0001C9 51                     479 	ld	d, c
+      0001CA D5                     480 	push	de
+      0001CB 21 08 0A               481 	ld	hl, #0xa08
+      0001CE E5                     482 	push	hl
+      0001CF 11r00r00               483 	ld	de, #_k_new_game_word_sprites
+      0001D2 D5                     484 	push	de
+      0001D3 CDr00r00               485 	call	_draw_basic_font_word
+      0001D6 E8 08                  486 	add	sp, #8
+                                    487 ;main.c:36: SPRITE_TILE_WIDTH,
+      0001D8 21rEDr00               488 	ld	hl, #_SPRITE_TILE_WIDTH
+      0001DB 46                     489 	ld	b, (hl)
+                                    490 ;main.c:35: SCREEN_MIN_Y + (12 * SPRITE_TILE_HEIGHT),
+      0001DC FArEEr00               491 	ld	a, (#_SPRITE_TILE_HEIGHT)
+      0001DF 5F                     492 	ld	e, a
+      0001E0 87                     493 	add	a, a
+      0001E1 83                     494 	add	a, e
+      0001E2 87                     495 	add	a, a
+      0001E3 87                     496 	add	a, a
+      0001E4 21rEAr00               497 	ld	hl, #_SCREEN_MIN_Y
+      0001E7 4E                     498 	ld	c, (hl)
+      0001E8 81                     499 	add	a, c
+      0001E9 4F                     500 	ld	c, a
+                                    501 ;main.c:34: SCREEN_MIN_X + (6 * SPRITE_TILE_WIDTH),
+      0001EA 78                     502 	ld	a, b
+      0001EB 5F                     503 	ld	e, a
+      0001EC 87                     504 	add	a, a
+      0001ED 83                     505 	add	a, e
+      0001EE 87                     506 	add	a, a
+      0001EF 21rE9r00               507 	ld	hl, #_SCREEN_MIN_X
+      0001F2 5E                     508 	ld	e, (hl)
+      0001F3 83                     509 	add	a, e
+      0001F4 5F                     510 	ld	e, a
+                                    511 ;main.c:31: draw_basic_font_word(&k_continue_word_sprites[0],
+      0001F5 AF                     512 	xor	a, a
+      0001F6 F5                     513 	push	af
+      0001F7 33                     514 	inc	sp
+      0001F8 C5                     515 	push	bc
+      0001F9 33                     516 	inc	sp
+      0001FA 51                     517 	ld	d, c
+      0001FB D5                     518 	push	de
+      0001FC 21 08 12               519 	ld	hl, #0x1208
+      0001FF E5                     520 	push	hl
+      000200 11r00r00               521 	ld	de, #_k_continue_word_sprites
+      000203 D5                     522 	push	de
+      000204 CDr00r00               523 	call	_draw_basic_font_word
+      000207 E8 08                  524 	add	sp, #8
+                                    525 ;main.c:39: SHOW_SPRITES;
+      000209 F0r00                  526 	ldh	a, (_LCDC_REG + 0)
+      00020B F6 02                  527 	or	a, #0x02
+      00020D E0r00                  528 	ldh	(_LCDC_REG + 0), a
+                                    529 ;main.c:40: DISPLAY_ON;
+      00020F F0r00                  530 	ldh	a, (_LCDC_REG + 0)
+      000211 F6 80                  531 	or	a, #0x80
+      000213 E0r00                  532 	ldh	(_LCDC_REG + 0), a
+                                    533 ;main.c:42: while (1)
+      000215                        534 00102$:
+                                    535 ;main.c:44: wait_vbls_done(1);
+      000215 3E 01                  536 	ld	a, #0x01
+      000217 F5                     537 	push	af
+      000218 33                     538 	inc	sp
+      000219 CDr5Er01               539 	call	_wait_vbls_done
+      00021C 33                     540 	inc	sp
+                                    541 ;main.c:46: }
+      00021D 18 F6                  542 	jr	00102$
+                                    543 	.area _CODE
+                                    544 	.area _INITIALIZER
+                                    545 	.area _CABS (ABS)

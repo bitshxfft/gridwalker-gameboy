@@ -1,0 +1,8 @@
+{
+    "C_Cpp.default.includePath": [
+        "c:/gameboy-dev/gbdk/include"
+	],
+	"files.associations": {
+		"basic-font-words.h": "c"
+	},
+}
