@@ -10,31 +10,31 @@ Area                       Addr        Size        Decimal Bytes (Attributes)
      00000000  .__.ABS.  |    00000000  _rRAMG    |    00000000  l__BASE  
      00000000  l__BSS    |    00000000  l__CABS   |    00000000  l__CODE_0
      00000000  l__DABS   |    00000000  l__HEADER |    00000000  l__HEAP  
-     00000000  l__HRAM   |    00000000  l__INITIA |    00000000  l__INITIA
-     00000000  l__LIT    |    00000000  s__CABS   |    00000000  s__DABS  
+     00000000  l__HRAM   |    00000000  l__LIT    |    00000000  s__CABS  
+     00000000  s__DABS   |    00000000  s__HEADER |    00000000  s__HEADER
      00000000  s__HEADER |    00000000  s__HEADER |    00000000  s__HEADER
      00000000  s__HEADER |    00000000  s__HEADER |    00000000  s__HEADER
      00000000  s__HEADER |    00000000  s__HEADER |    00000000  s__HEADER
      00000000  s__HEADER |    00000000  s__HEADER |    00000000  s__HEADER
      00000000  s__HEADER |    00000000  s__HEADER |    00000000  s__HEADER
-     00000000  s__HEADER |    00000000  s__HEADER |    00000000  s__HEADER
-     00000000  s__HEADER |    00000000  s__HRAM   |    00000000  s__HRAM12
-     00000001  l__GSFINA |    00000001  l__HEADER |    00000001  l__HEADER
+     00000000  s__HEADER |    00000000  s__HEADER |    00000000  s__HRAM  
+     00000000  s__HRAM12 |    00000001  l__GSFINA |    00000001  l__HEADER
      00000001  l__HEADER |    00000001  l__HEADER |    00000001  l__HEADER
-     00000001  l__HEADER |    00000001  l__HEADER |    00000002  l__HEADER
-     00000002  l__HEADER |    00000002  l__HEADER |    00000003  l__HEADER
-     00000003  l__HRAM12 |    00000005  l__HEADER |    00000006  l__HEADER
+     00000001  l__HEADER |    00000001  l__HEADER |    00000001  l__HEADER
+     00000002  l__HEADER |    00000002  l__HEADER |    00000002  l__HEADER
+     00000003  l__HEADER |    00000003  l__HRAM12 |    00000003  l__INITIA
+     00000003  l__INITIA |    00000005  l__HEADER |    00000006  l__HEADER
      00000007  l__HEADER |    00000008  l__HEADER |    0000000C  l__GSINIT
      00000019  l__DATA   |    00000030  l__HEADER |    0000004E  l__HEADER
-     00000082  l__HEADER |    00000127  l__HOME   |    00000200  s__CODE  
-     00000513  l__CODE   |    00000713  s__HOME   |    0000083A  s__BASE  
-     0000083A  s__CODE_0 |    0000083A  s__GSINIT |    0000083A  s__INITIA
-     0000083A  s__LIT    |    00000846  s__GSFINA |    00002000  _rROMB0  
+     00000082  l__HEADER |    0000016A  l__HOME   |    00000200  s__CODE  
+     000008B9  l__CODE   |    00000AB9  s__HOME   |    00000C23  s__BASE  
+     00000C23  s__CODE_0 |    00000C23  s__INITIA |    00000C23  s__LIT   
+     00000C26  s__GSINIT |    00000C32  s__GSFINA |    00002000  _rROMB0  
      00003000  _rROMB1   |    00004000  _rRAMB    |    00008000  __VRAM   
      00008000  __VRAM800 |    00008800  __VRAM880 |    00009000  __VRAM900
      00009800  __SCRN0   |    00009C00  __SCRN1   |    0000A000  __SRAM   
      0000C000  __RAM     |    0000C000  _shadow_O |    0000C0A0  s__DATA  
-     0000C0B9  s__BSS    |    0000C0B9  s__HEAP   |    0000C0B9  s__INITIA
+     0000C0B9  s__BSS    |    0000C0B9  s__INITIA |    0000C0BC  s__HEAP  
      0000D000  __RAMBANK |    0000E000  .STACK    |    0000FE00  __OAMRAM 
      0000FF00  _P1_REG   |    0000FF00  __IO      |    0000FF01  _SB_REG  
      0000FF02  _SC_REG   |    0000FF04  _DIV_REG  |    0000FF05  _TIMA_REG
@@ -62,14 +62,22 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_CODE                  00000200    00000513 =        1299. bytes (REL,CON)
+_CODE                  00000200    000008B9 =        2233. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
      00000200  _basic_fo |    00000470  _draw_bas |    000004DA  _k_gridwa
-     000004E4  _k_new_ga |    000004EC  _k_contin |    000004F4  _update_i
-     000005E3  _was_inpu |    00000608  _was_inpu |    0000062E  _is_input
-     00000652  _wait_vbl |    0000065F  _main    
+     000004E4  _k_new_ga |    000004EC  _k_contin |    000004F4  _k_passwo
+     000004FC  _k_chapte |    00000503  _update_i |    000005EC  _was_inpu
+     00000611  _was_inpu |    00000637  _is_input |    0000065B  _splash_e
+     0000065C  _splash_u |    0000065F  _splash_e |    00000660  _title_en
+     00000705  _title_up |    00000757  _title_ex |    00000774  _password
+     000007B7  _password |    000007CE  _password |    000007EB  _chapter_
+     0000082E  _chapter_ |    00000845  _chapter_ |    00000862  _game_ent
+     00000863  _game_upd |    00000866  _game_exi |    00000867  _pause_en
+     00000868  _pause_up |    0000086B  _pause_ex |    0000086C  _credits_
+     0000086D  _credits_ |    00000870  _credits_ |    00000871  _wait_vbl
+     00000884  _main    
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
 
@@ -244,37 +252,49 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_HOME                  00000713    00000127 =         295. bytes (REL,CON)
+_HOME                  00000AB9    0000016A =         362. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     00000713  .memset_s |    0000071C  .memcpy_s |    00000739  .remove_V
-     0000073C  .remove_i |    00000759  .add_VBL  |    0000075C  .add_int 
-     00000767  .wait_vbl |    00000767  _wait_vbl |    00000777  .display_
-     00000777  _display_ |    0000078F  _remove_V |    0000079A  _add_VBL 
-     000007A5  _set_tile |    000007AA  _set_bkg_ |    000007AA  _set_win_
-     000007B2  _set_spri |    000007E2  __mulsuch |    000007EC  __mulusch
-     000007F6  __mulscha |    00000808  __mulucha |    00000814  __mulint 
+     00000AB9  .memset_s |    00000AC2  .memcpy_s |    00000ADF  .remove_V
+     00000AE2  .remove_i |    00000AFF  .add_VBL  |    00000B02  .add_int 
+     00000B0D  .wait_vbl |    00000B0D  _wait_vbl |    00000B1D  .display_
+     00000B1D  _display_ |    00000B35  _remove_V |    00000B40  _add_VBL 
+     00000B4B  _set_tile |    00000B50  _set_bkg_ |    00000B50  _set_win_
+     00000B58  _set_spri |    00000B88  __mulsuch |    00000B92  __mulusch
+     00000B9C  __mulscha |    00000BAE  __mulucha |    00000BBA  __mulint 
+     00000BE0  .padup    |    00000BE0  _waitpadu |    00000BF0  .jpad    
+     00000BF0  _joypad   |    00000C18  _waitpad  |    00000C1B  .wait_pad
+     00000C22  ___sdcc_c
 ASxxxx Linker V03.00 + NoICE + sdld,  page 22.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_GSINIT                0000083A    0000000C =          12. bytes (REL,CON)
+_INITIALIZER           00000C23    00000003 =           3. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     0000083A  gsinit   
 ASxxxx Linker V03.00 + NoICE + sdld,  page 23.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_GSFINAL               00000846    00000001 =           1. bytes (REL,CON)
+_GSINIT                00000C26    0000000C =          12. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
+     00000C26  gsinit   
 ASxxxx Linker V03.00 + NoICE + sdld,  page 24.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_GSFINAL               00000C32    00000001 =           1. bytes (REL,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+ASxxxx Linker V03.00 + NoICE + sdld,  page 25.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
@@ -285,7 +305,17 @@ _DATA                  0000C0A0    00000019 =          25. bytes (REL,CON)
         -----  ------            -----  ------            -----  ------    
      0000C0A0  __cpu     |    0000C0A1  __is_GBA  |    0000C0A2  .mode    
      0000C0A3  .sys_time |    0000C0A3  _sys_time |    0000C0A5  .int_0x40
-ASxxxx Linker V03.00 + NoICE + sdld,  page 25.
+ASxxxx Linker V03.00 + NoICE + sdld,  page 26.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_INITIALIZED           0000C0B9    00000003 =           3. bytes (REL,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+     0000C0B9  _menu_sel |    0000C0BA  _menu_opt
+ASxxxx Linker V03.00 + NoICE + sdld,  page 27.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
@@ -295,7 +325,7 @@ _HRAM12                00000000    00000003 =           3. bytes (ABS,CON)
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
      0000FF90  __current |    0000FF92  __shadow_
-ASxxxx Linker V03.00 + NoICE + sdld,  page 26.
+ASxxxx Linker V03.00 + NoICE + sdld,  page 28.
 
 Files Linked                              [ module(s) ]
 
@@ -303,6 +333,14 @@ c:\gameboy-dev\gbdk\lib/small/asxxxx/gb/crt0.o
                                           [ Runtime ]
 build\basic-font.o                        [ basic_font ]
 build\basic-font-words.o                  [ basic_font_words ]
+build\input.o                             [ input ]
+build\game-state-splash.o                 [ game_state_splash ]
+build\game-state-title.o                  [ game_state_title ]
+build\game-state-password.o               [ game_state_password ]
+build\game-state-chapter-intro.o          [ game_state_chapter_intro ]
+build\game-state-game.o                   [ game_state_game ]
+build\game-state-pause.o                  [ game_state_pause ]
+build\game-state-credits.o                [ game_state_credits ]
 build\main.o                              [ main ]
 
 
@@ -313,15 +351,19 @@ c:\gameboy-dev\gbdk\lib/small/asxxxx/gb/gb.lib
 c:\gameboy-dev\gbdk\lib/small/asxxxx/gbz80/gbz80.lib
                                           [ mul.o ]
 c:\gameboy-dev\gbdk\lib/small/asxxxx/gb/gb.lib
+                                          [ pad.o ]
+c:\gameboy-dev\gbdk\lib/small/asxxxx/gbz80/gbz80.lib
+                                          [ __sdcc_call_hl.o ]
+c:\gameboy-dev\gbdk\lib/small/asxxxx/gb/gb.lib
                                           [ sfr.o ]
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 27.
+ASxxxx Linker V03.00 + NoICE + sdld,  page 29.
 
 User Base Address Definitions
 
 _DATA=0xC0A0
 _CODE=0x0200
-ASxxxx Linker V03.00 + NoICE + sdld,  page 28.
+ASxxxx Linker V03.00 + NoICE + sdld,  page 30.
 
 User Global Definitions
 

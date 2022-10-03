@@ -1,14 +1,16 @@
 XL3
-H 9 areas 7 global symbols
+H 9 areas 9 global symbols
 M basic_font_words
 O -mgbz80
 S .__.ABS. Def000000
 S __muluchar Ref000000
 S _shadow_OAM Ref000000
-A _CODE size 84 flags 0 addr 0
+A _CODE size 93 flags 0 addr 0
 S _k_continue_word_sprites Def00007C
+S _k_chapter_word_sprites Def00008C
 S _k_gridwalker_word_sprites Def00006A
 S _draw_basic_font_word Def000000
+S _k_password_word_sprites Def000084
 S _k_new_game_word_sprites Def000074
 A _DATA size 0 flags 0 addr 0
 A _INITIALIZED size 0 flags 0 addr 0
@@ -59,4 +61,12 @@ R 00 00 00 00
 T 7C 00 00
 R 00 00 00 00
 T 7C 00 00 02 0E 0D 13 08 0D 14 04
+R 00 00 00 00
+T 84 00 00
+R 00 00 00 00
+T 84 00 00 0F 00 12 12 16 0E 11 03
+R 00 00 00 00
+T 8C 00 00
+R 00 00 00 00
+T 8C 00 00 02 07 00 0F 13 04 11
 R 00 00 00 00

@@ -5,13 +5,13 @@
 
 enum e_game_state
 {
-	splash			= 1 << 0,
-	title			= 1 << 1,
-	enter_password	= 1 << 2,
-	chapter_intro	= 1 << 3,
-	game			= 1 << 4,
-	pause			= 1 << 5,
-	credits			= 1 << 6
+	gs_splash			= 0,
+	gs_title			= 1,
+	gs_enter_password	= 2,
+	gs_chapter_intro	= 3,
+	gs_game				= 4,
+	gs_pause			= 5,
+	gs_credits			= 6
 };
 
 #endif // __GAME_STATE_H__

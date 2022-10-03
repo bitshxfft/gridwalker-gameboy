@@ -1,8 +1,13 @@
-#ifndef __GAME_STATE_SPLASH_H__
-#define __GAME_STATE_SPLASH_H__
+#ifndef __GAME_STATE_PASSWORD_H__
+#define __GAME_STATE_PASSWORD_H__
 
-void splash_enter();
-void splash_update();
-void splash_exit();
+#include <stdint.h>
+#include "input.h"
 
-#endif // __GAME_STATE_SPLAS_H__
+// ------------------------------------------------------------------------------------
+
+void password_enter();
+uint8_t password_update(struct input_state* input_state);
+void password_exit();
+
+#endif // __GAME_STATE_PASSWORD_H__

@@ -3,6 +3,7 @@
         "c:/gameboy-dev/gbdk/include"
 	],
 	"files.associations": {
-		"basic-font-words.h": "c"
+		"basic-font-words.h": "c",
+		"game-state.h": "c"
 	},
 }

@@ -1,0 +1,305 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.1.6 #12539 (MINGW32)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module game_state_title
+                                      6 	.optsdcc -mgbz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _draw_basic_font_word
+                                     12 	.globl _set_sprite_data
+                                     13 	.globl _was_input_depressed
+                                     14 	.globl _menu_options
+                                     15 	.globl _menu_selection
+                                     16 	.globl _title_enter
+                                     17 	.globl _title_update
+                                     18 	.globl _title_exit
+                                     19 ;--------------------------------------------------------
+                                     20 ; special function registers
+                                     21 ;--------------------------------------------------------
+                                     22 ;--------------------------------------------------------
+                                     23 ; ram data
+                                     24 ;--------------------------------------------------------
+                                     25 	.area _DATA
+                                     26 ;--------------------------------------------------------
+                                     27 ; ram data
+                                     28 ;--------------------------------------------------------
+                                     29 	.area _INITIALIZED
+      000000                         30 _menu_selection::
+      000000                         31 	.ds 1
+      000001                         32 _menu_options::
+      000001                         33 	.ds 2
+                                     34 ;--------------------------------------------------------
+                                     35 ; absolute external ram data
+                                     36 ;--------------------------------------------------------
+                                     37 	.area _DABS (ABS)
+                                     38 ;--------------------------------------------------------
+                                     39 ; global & static initialisations
+                                     40 ;--------------------------------------------------------
+                                     41 	.area _HOME
+                                     42 	.area _GSINIT
+                                     43 	.area _GSFINAL
+                                     44 	.area _GSINIT
+                                     45 ;--------------------------------------------------------
+                                     46 ; Home
+                                     47 ;--------------------------------------------------------
+                                     48 	.area _HOME
+                                     49 	.area _HOME
+                                     50 ;--------------------------------------------------------
+                                     51 ; code
+                                     52 ;--------------------------------------------------------
+                                     53 	.area _CODE
+                                     54 ;game-state-title.c:14: void title_enter()
+                                     55 ;	---------------------------------
+                                     56 ; Function title_enter
+                                     57 ; ---------------------------------
+      000000                         58 _title_enter::
+                                     59 ;game-state-title.c:17: set_sprite_data(0, 38, basic_font_sprites);
+      000000 11r00r00                60 	ld	de, #_basic_font_sprites
+      000003 D5                      61 	push	de
+      000004 21 00 26                62 	ld	hl, #0x2600
+      000007 E5                      63 	push	hl
+      000008 CDr00r00                64 	call	_set_sprite_data
+      00000B E8 04                   65 	add	sp, #4
+                                     66 ;game-state-title.c:25: SPRITE_TILE_WIDTH,
+      00000D 21rA3r00                67 	ld	hl, #_SPRITE_TILE_WIDTH
+      000010 46                      68 	ld	b, (hl)
+                                     69 ;game-state-title.c:24: SCREEN_MIN_Y + (3 * SPRITE_TILE_HEIGHT),
+      000011 FArA4r00                70 	ld	a, (#_SPRITE_TILE_HEIGHT)
+      000014 5F                      71 	ld	e, a
+      000015 87                      72 	add	a, a
+      000016 83                      73 	add	a, e
+      000017 21rA0r00                74 	ld	hl, #_SCREEN_MIN_Y
+      00001A 4E                      75 	ld	c, (hl)
+      00001B 81                      76 	add	a, c
+      00001C 4F                      77 	ld	c, a
+                                     78 ;game-state-title.c:23: SCREEN_MIN_X + (5 * SPRITE_TILE_WIDTH),
+      00001D 78                      79 	ld	a, b
+      00001E 5F                      80 	ld	e, a
+      00001F 87                      81 	add	a, a
+      000020 87                      82 	add	a, a
+      000021 83                      83 	add	a, e
+      000022 21r9Fr00                84 	ld	hl, #_SCREEN_MIN_X
+      000025 5E                      85 	ld	e, (hl)
+      000026 83                      86 	add	a, e
+      000027 5F                      87 	ld	e, a
+                                     88 ;game-state-title.c:20: draw_basic_font_word(&k_gridwalker_word_sprites[0],
+      000028 AF                      89 	xor	a, a
+      000029 F5                      90 	push	af
+      00002A 33                      91 	inc	sp
+      00002B C5                      92 	push	bc
+      00002C 33                      93 	inc	sp
+      00002D 51                      94 	ld	d, c
+      00002E D5                      95 	push	de
+      00002F 21 0A 00                96 	ld	hl, #0x0a
+      000032 E5                      97 	push	hl
+      000033 11r00r00                98 	ld	de, #_k_gridwalker_word_sprites
+      000036 D5                      99 	push	de
+      000037 CDr00r00               100 	call	_draw_basic_font_word
+      00003A E8 08                  101 	add	sp, #8
+                                    102 ;game-state-title.c:34: SPRITE_TILE_WIDTH,
+      00003C 21rA3r00               103 	ld	hl, #_SPRITE_TILE_WIDTH
+      00003F 46                     104 	ld	b, (hl)
+                                    105 ;game-state-title.c:33: SCREEN_MIN_Y + (10 * SPRITE_TILE_HEIGHT),
+      000040 FArA4r00               106 	ld	a, (#_SPRITE_TILE_HEIGHT)
+      000043 5F                     107 	ld	e, a
+      000044 87                     108 	add	a, a
+      000045 87                     109 	add	a, a
+      000046 83                     110 	add	a, e
+      000047 87                     111 	add	a, a
+      000048 21rA0r00               112 	ld	hl, #_SCREEN_MIN_Y
+      00004B 4E                     113 	ld	c, (hl)
+      00004C 81                     114 	add	a, c
+      00004D 4F                     115 	ld	c, a
+                                    116 ;game-state-title.c:32: SCREEN_MIN_X + (6 * SPRITE_TILE_WIDTH),
+      00004E 78                     117 	ld	a, b
+      00004F 5F                     118 	ld	e, a
+      000050 87                     119 	add	a, a
+      000051 83                     120 	add	a, e
+      000052 87                     121 	add	a, a
+      000053 21r9Fr00               122 	ld	hl, #_SCREEN_MIN_X
+      000056 5E                     123 	ld	e, (hl)
+      000057 83                     124 	add	a, e
+      000058 5F                     125 	ld	e, a
+                                    126 ;game-state-title.c:29: draw_basic_font_word(&k_new_game_word_sprites[0],
+      000059 AF                     127 	xor	a, a
+      00005A F5                     128 	push	af
+      00005B 33                     129 	inc	sp
+      00005C C5                     130 	push	bc
+      00005D 33                     131 	inc	sp
+      00005E 51                     132 	ld	d, c
+      00005F D5                     133 	push	de
+      000060 21 08 0A               134 	ld	hl, #0xa08
+      000063 E5                     135 	push	hl
+      000064 11r00r00               136 	ld	de, #_k_new_game_word_sprites
+      000067 D5                     137 	push	de
+      000068 CDr00r00               138 	call	_draw_basic_font_word
+      00006B E8 08                  139 	add	sp, #8
+                                    140 ;game-state-title.c:43: SPRITE_TILE_WIDTH,
+      00006D 21rA3r00               141 	ld	hl, #_SPRITE_TILE_WIDTH
+      000070 46                     142 	ld	b, (hl)
+                                    143 ;game-state-title.c:42: SCREEN_MIN_Y + (12 * SPRITE_TILE_HEIGHT),
+      000071 FArA4r00               144 	ld	a, (#_SPRITE_TILE_HEIGHT)
+      000074 5F                     145 	ld	e, a
+      000075 87                     146 	add	a, a
+      000076 83                     147 	add	a, e
+      000077 87                     148 	add	a, a
+      000078 87                     149 	add	a, a
+      000079 21rA0r00               150 	ld	hl, #_SCREEN_MIN_Y
+      00007C 4E                     151 	ld	c, (hl)
+      00007D 81                     152 	add	a, c
+      00007E 4F                     153 	ld	c, a
+                                    154 ;game-state-title.c:41: SCREEN_MIN_X + (6 * SPRITE_TILE_WIDTH),
+      00007F 78                     155 	ld	a, b
+      000080 5F                     156 	ld	e, a
+      000081 87                     157 	add	a, a
+      000082 83                     158 	add	a, e
+      000083 87                     159 	add	a, a
+      000084 21r9Fr00               160 	ld	hl, #_SCREEN_MIN_X
+      000087 5E                     161 	ld	e, (hl)
+      000088 83                     162 	add	a, e
+      000089 5F                     163 	ld	e, a
+                                    164 ;game-state-title.c:38: draw_basic_font_word(&k_continue_word_sprites[0],
+      00008A AF                     165 	xor	a, a
+      00008B F5                     166 	push	af
+      00008C 33                     167 	inc	sp
+      00008D C5                     168 	push	bc
+      00008E 33                     169 	inc	sp
+      00008F 51                     170 	ld	d, c
+      000090 D5                     171 	push	de
+      000091 21 08 12               172 	ld	hl, #0x1208
+      000094 E5                     173 	push	hl
+      000095 11r00r00               174 	ld	de, #_k_continue_word_sprites
+      000098 D5                     175 	push	de
+      000099 CDr00r00               176 	call	_draw_basic_font_word
+      00009C E8 08                  177 	add	sp, #8
+                                    178 ;game-state-title.c:45: }
+      00009E C9                     179 	ret
+      00009F                        180 _SCREEN_MIN_X:
+      00009F 08                     181 	.db #0x08	; 8
+      0000A0                        182 _SCREEN_MIN_Y:
+      0000A0 10                     183 	.db #0x10	; 16
+      0000A1                        184 _SCREEN_WIDTH:
+      0000A1 A0                     185 	.db #0xa0	; 160
+      0000A2                        186 _SCREEN_HEIGHT:
+      0000A2 90                     187 	.db #0x90	; 144
+      0000A3                        188 _SPRITE_TILE_WIDTH:
+      0000A3 08                     189 	.db #0x08	; 8
+      0000A4                        190 _SPRITE_TILE_HEIGHT:
+      0000A4 08                     191 	.db #0x08	; 8
+                                    192 ;game-state-title.c:47: uint8_t title_update(struct input_state* input_state)
+                                    193 ;	---------------------------------
+                                    194 ; Function title_update
+                                    195 ; ---------------------------------
+      0000A5                        196 _title_update::
+                                    197 ;game-state-title.c:49: if (was_input_depressed(input_state, btn_up)
+      0000A5 3E 02                  198 	ld	a, #0x02
+      0000A7 F5                     199 	push	af
+      0000A8 33                     200 	inc	sp
+      0000A9 F8 03                  201 	ldhl	sp,	#3
+      0000AB 2A                     202 	ld	a, (hl+)
+      0000AC 5F                     203 	ld	e, a
+      0000AD 56                     204 	ld	d, (hl)
+      0000AE D5                     205 	push	de
+      0000AF CDr00r00               206 	call	_was_input_depressed
+      0000B2 E8 03                  207 	add	sp, #3
+      0000B4 7B                     208 	ld	a, e
+      0000B5 B7                     209 	or	a, a
+      0000B6 20 13                  210 	jr	NZ, 00101$
+                                    211 ;game-state-title.c:50: || was_input_depressed(input_state, btn_down))
+      0000B8 3E 03                  212 	ld	a, #0x03
+      0000BA F5                     213 	push	af
+      0000BB 33                     214 	inc	sp
+      0000BC F8 03                  215 	ldhl	sp,	#3
+      0000BE 2A                     216 	ld	a, (hl+)
+      0000BF 5F                     217 	ld	e, a
+      0000C0 56                     218 	ld	d, (hl)
+      0000C1 D5                     219 	push	de
+      0000C2 CDr00r00               220 	call	_was_input_depressed
+      0000C5 E8 03                  221 	add	sp, #3
+      0000C7 7B                     222 	ld	a, e
+      0000C8 B7                     223 	or	a, a
+      0000C9 28 07                  224 	jr	Z, 00102$
+      0000CB                        225 00101$:
+                                    226 ;game-state-title.c:52: menu_selection ^= 0x01; // toggle between index 0 and 1
+      0000CB 21r00r00               227 	ld	hl, #_menu_selection
+      0000CE 7E                     228 	ld	a, (hl)
+      0000CF EE 01                  229 	xor	a, #0x01
+      0000D1 77                     230 	ld	(hl), a
+      0000D2                        231 00102$:
+                                    232 ;game-state-title.c:55: if (was_input_depressed(input_state, btn_start))
+      0000D2 3E 06                  233 	ld	a, #0x06
+      0000D4 F5                     234 	push	af
+      0000D5 33                     235 	inc	sp
+      0000D6 F8 03                  236 	ldhl	sp,	#3
+      0000D8 2A                     237 	ld	a, (hl+)
+      0000D9 5F                     238 	ld	e, a
+      0000DA 56                     239 	ld	d, (hl)
+      0000DB D5                     240 	push	de
+      0000DC CDr00r00               241 	call	_was_input_depressed
+      0000DF E8 03                  242 	add	sp, #3
+      0000E1 7B                     243 	ld	a, e
+      0000E2 B7                     244 	or	a, a
+      0000E3 28 0F                  245 	jr	Z, 00105$
+                                    246 ;game-state-title.c:57: return menu_options[menu_selection];
+      0000E5 01r01r00               247 	ld	bc, #_menu_options+0
+      0000E8 79                     248 	ld	a, c
+      0000E9 21r00r00               249 	ld	hl, #_menu_selection
+      0000EC 86                     250 	add	a, (hl)
+      0000ED 4F                     251 	ld	c, a
+      0000EE 30 01                  252 	jr	NC, 00118$
+      0000F0 04                     253 	inc	b
+      0000F1                        254 00118$:
+      0000F1 0A                     255 	ld	a, (bc)
+      0000F2 5F                     256 	ld	e, a
+      0000F3 C9                     257 	ret
+      0000F4                        258 00105$:
+                                    259 ;game-state-title.c:60: return gs_title;
+      0000F4 1E 01                  260 	ld	e, #0x01
+                                    261 ;game-state-title.c:61: }
+      0000F6 C9                     262 	ret
+                                    263 ;game-state-title.c:63: void title_exit()
+                                    264 ;	---------------------------------
+                                    265 ; Function title_exit
+                                    266 ; ---------------------------------
+      0000F7                        267 _title_exit::
+                                    268 ;game-state-title.c:65: for (int i = 0; i < 26; ++i)
+      0000F7 01 00 00               269 	ld	bc, #0x0000
+      0000FA                        270 00104$:
+      0000FA 79                     271 	ld	a, c
+      0000FB D6 1A                  272 	sub	a, #0x1a
+      0000FD 78                     273 	ld	a, b
+      0000FE 17                     274 	rla
+      0000FF 3F                     275 	ccf
+      000100 1F                     276 	rra
+      000101 DE 80                  277 	sbc	a, #0x80
+      000103 D0                     278 	ret	NC
+                                    279 ;game-state-title.c:67: move_sprite(i, 0, 0);
+      000104 59                     280 	ld	e, c
+                                    281 ;c:/gameboy-dev/gbdk/include/gb\gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+      000105 26 00                  282 	ld	h, #0x00
+                                    283 ;	spillPairReg hl
+                                    284 ;	spillPairReg hl
+      000107 6B                     285 	ld	l, e
+      000108 29                     286 	add	hl, hl
+      000109 29                     287 	add	hl, hl
+      00010A 11r00r00               288 	ld	de, #_shadow_OAM
+      00010D 19                     289 	add	hl, de
+                                    290 ;c:/gameboy-dev/gbdk/include/gb\gb.h:1521: itm->y=y, itm->x=x;
+      00010E AF                     291 	xor	a, a
+      00010F 22                     292 	ld	(hl+), a
+      000110 77                     293 	ld	(hl), a
+                                    294 ;game-state-title.c:65: for (int i = 0; i < 26; ++i)
+      000111 03                     295 	inc	bc
+                                    296 ;game-state-title.c:69: }
+      000112 18 E6                  297 	jr	00104$
+                                    298 	.area _CODE
+                                    299 	.area _INITIALIZER
+      000000                        300 __xinit__menu_selection:
+      000000 00                     301 	.db #0x00	; 0
+      000001                        302 __xinit__menu_options:
+      000001 03                     303 	.db #0x03	; 3
+      000002 02                     304 	.db #0x02	; 2
+                                    305 	.area _CABS (ABS)

@@ -19,5 +19,7 @@ void draw_basic_font_word(
 extern const uint8_t k_gridwalker_word_sprites[];
 extern const uint8_t k_new_game_word_sprites[];
 extern const uint8_t k_continue_word_sprites[];
+extern const uint8_t k_password_word_sprites[];
+extern const uint8_t k_chapter_word_sprites[];
 
 #endif // __BASIC_FONT_WORDS_H__

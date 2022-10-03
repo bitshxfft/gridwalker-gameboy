@@ -41,6 +41,29 @@ const uint8_t k_continue_word_sprites[] =
 	BASIC_FONT_E
 };
 
+const uint8_t k_password_word_sprites[] =
+{
+	BASIC_FONT_P,
+	BASIC_FONT_A,
+	BASIC_FONT_S,
+	BASIC_FONT_S,
+	BASIC_FONT_W,
+	BASIC_FONT_O,
+	BASIC_FONT_R,
+	BASIC_FONT_D
+};
+
+const uint8_t k_chapter_word_sprites[] =
+{
+	BASIC_FONT_C,
+	BASIC_FONT_H,
+	BASIC_FONT_A,
+	BASIC_FONT_P,
+	BASIC_FONT_T,
+	BASIC_FONT_E,
+	BASIC_FONT_R
+};
+
 // ------------------------------------------------------------------------------------
 
 void draw_basic_font_word(

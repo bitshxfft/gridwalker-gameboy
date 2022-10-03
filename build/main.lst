@@ -10,536 +10,552 @@
                                      10 ;--------------------------------------------------------
                                      11 	.globl _main
                                      12 	.globl _wait_vbls_done
-                                     13 	.globl _draw_basic_font_word
-                                     14 	.globl _is_input_held
-                                     15 	.globl _was_input_released
-                                     16 	.globl _was_input_depressed
-                                     17 	.globl _update_input_state
-                                     18 	.globl _set_sprite_data
-                                     19 	.globl _wait_vbl_done
-                                     20 ;--------------------------------------------------------
-                                     21 ; special function registers
-                                     22 ;--------------------------------------------------------
-                                     23 ;--------------------------------------------------------
-                                     24 ; ram data
-                                     25 ;--------------------------------------------------------
-                                     26 	.area _DATA
-                                     27 ;--------------------------------------------------------
-                                     28 ; ram data
-                                     29 ;--------------------------------------------------------
-                                     30 	.area _INITIALIZED
-                                     31 ;--------------------------------------------------------
-                                     32 ; absolute external ram data
-                                     33 ;--------------------------------------------------------
-                                     34 	.area _DABS (ABS)
-                                     35 ;--------------------------------------------------------
-                                     36 ; global & static initialisations
+                                     13 	.globl _title_exit
+                                     14 	.globl _title_update
+                                     15 	.globl _title_enter
+                                     16 	.globl _splash_exit
+                                     17 	.globl _splash_update
+                                     18 	.globl _splash_enter
+                                     19 	.globl _pause_exit
+                                     20 	.globl _pause_update
+                                     21 	.globl _pause_enter
+                                     22 	.globl _password_exit
+                                     23 	.globl _password_update
+                                     24 	.globl _password_enter
+                                     25 	.globl _game_exit
+                                     26 	.globl _game_update
+                                     27 	.globl _game_enter
+                                     28 	.globl _credits_exit
+                                     29 	.globl _credits_update
+                                     30 	.globl _credits_enter
+                                     31 	.globl _chapter_intro_exit
+                                     32 	.globl _chapter_intro_update
+                                     33 	.globl _chapter_intro_enter
+                                     34 	.globl _update_input_state
+                                     35 	.globl _wait_vbl_done
+                                     36 	.globl _joypad
                                      37 ;--------------------------------------------------------
-                                     38 	.area _HOME
-                                     39 	.area _GSINIT
-                                     40 	.area _GSFINAL
-                                     41 	.area _GSINIT
+                                     38 ; special function registers
+                                     39 ;--------------------------------------------------------
+                                     40 ;--------------------------------------------------------
+                                     41 ; ram data
                                      42 ;--------------------------------------------------------
-                                     43 ; Home
+                                     43 	.area _DATA
                                      44 ;--------------------------------------------------------
-                                     45 	.area _HOME
-                                     46 	.area _HOME
-                                     47 ;--------------------------------------------------------
-                                     48 ; code
-                                     49 ;--------------------------------------------------------
-                                     50 	.area _CODE
-                                     51 ;input.h:33: void update_input_state(struct input_state* is, uint8_t button_state)
-                                     52 ;	---------------------------------
-                                     53 ; Function update_input_state
-                                     54 ; ---------------------------------
-      000000                         55 _update_input_state::
-      000000 E8 FB                   56 	add	sp, #-5
-                                     57 ;input.h:36: is->previous_state = is->current_state;
-      000002 F8 07                   58 	ldhl	sp,	#7
-      000004 7E                      59 	ld	a, (hl)
-      000005 F8 00                   60 	ldhl	sp,	#0
-      000007 77                      61 	ld	(hl), a
-      000008 F8 08                   62 	ldhl	sp,	#8
-      00000A 7E                      63 	ld	a, (hl)
-      00000B F8 01                   64 	ldhl	sp,	#1
-      00000D 22                      65 	ld	(hl+), a
-      00000E C1                      66 	pop	bc
-      00000F C5                      67 	push	bc
-      000010 03                      68 	inc	bc
-      000011 0A                      69 	ld	a, (bc)
-      000012 77                      70 	ld	(hl), a
-      000013 D1                      71 	pop	de
-      000014 D5                      72 	push	de
-      000015 7E                      73 	ld	a, (hl)
-      000016 12                      74 	ld	(de), a
-                                     75 ;input.h:39: is->current_state = ((button_state & J_A) == J_A) << btn_a;
-      000017 F8 09                   76 	ldhl	sp,	#9
-      000019 7E                      77 	ld	a, (hl)
-      00001A F8 03                   78 	ldhl	sp,	#3
-      00001C 22                      79 	ld	(hl+), a
-      00001D AF                      80 	xor	a, a
-      00001E 32                      81 	ld	(hl-), a
-      00001F 7E                      82 	ld	a, (hl)
-      000020 E6 10                   83 	and	a, #0x10
-      000022 5F                      84 	ld	e, a
-      000023 16 00                   85 	ld	d, #0x00
-      000025 7B                      86 	ld	a, e
-      000026 D6 10                   87 	sub	a, #0x10
-      000028 B2                      88 	or	a, d
-      000029 3E 01                   89 	ld	a, #0x01
-      00002B 28 01                   90 	jr	Z, 00104$
-      00002D AF                      91 	xor	a, a
-      00002E                         92 00104$:
-                                     93 ;input.h:40: is->current_state |= ((button_state & J_B) == J_B) << btn_b;
-      00002E 02                      94 	ld	(bc), a
-      00002F 5F                      95 	ld	e, a
-      000030 F8 03                   96 	ldhl	sp,	#3
-      000032 7E                      97 	ld	a, (hl)
-      000033 E6 20                   98 	and	a, #0x20
-                                     99 ;	spillPairReg hl
-                                    100 ;	spillPairReg hl
-      000035 2E 00                  101 	ld	l, #0x00
-      000037 D6 20                  102 	sub	a, #0x20
-      000039 B5                     103 	or	a, l
-      00003A 3E 01                  104 	ld	a, #0x01
-      00003C 28 01                  105 	jr	Z, 00106$
-      00003E AF                     106 	xor	a, a
-      00003F                        107 00106$:
-      00003F 87                     108 	add	a, a
-      000040 B3                     109 	or	a, e
-      000041 5F                     110 	ld	e, a
-      000042 02                     111 	ld	(bc), a
-                                    112 ;input.h:41: is->current_state |= ((button_state & J_UP) == J_UP) << btn_up;
-      000043 F8 03                  113 	ldhl	sp,	#3
-      000045 7E                     114 	ld	a, (hl)
-      000046 E6 04                  115 	and	a, #0x04
-                                    116 ;	spillPairReg hl
-                                    117 ;	spillPairReg hl
-      000048 2E 00                  118 	ld	l, #0x00
-      00004A D6 04                  119 	sub	a, #0x04
-      00004C B5                     120 	or	a, l
-      00004D 3E 01                  121 	ld	a, #0x01
-      00004F 28 01                  122 	jr	Z, 00108$
-      000051 AF                     123 	xor	a, a
-      000052                        124 00108$:
-      000052 87                     125 	add	a, a
-      000053 87                     126 	add	a, a
-      000054 B3                     127 	or	a, e
-      000055 5F                     128 	ld	e, a
-      000056 02                     129 	ld	(bc), a
-                                    130 ;input.h:42: is->current_state |= ((button_state & J_DOWN) == J_DOWN) << btn_down;
-      000057 F8 03                  131 	ldhl	sp,	#3
-      000059 7E                     132 	ld	a, (hl)
-      00005A E6 08                  133 	and	a, #0x08
-                                    134 ;	spillPairReg hl
-                                    135 ;	spillPairReg hl
-      00005C 2E 00                  136 	ld	l, #0x00
-      00005E D6 08                  137 	sub	a, #0x08
-      000060 B5                     138 	or	a, l
-      000061 3E 01                  139 	ld	a, #0x01
-      000063 28 01                  140 	jr	Z, 00110$
-      000065 AF                     141 	xor	a, a
-      000066                        142 00110$:
-      000066 87                     143 	add	a, a
-      000067 87                     144 	add	a, a
-      000068 87                     145 	add	a, a
-      000069 B3                     146 	or	a, e
-      00006A 5F                     147 	ld	e, a
-      00006B 02                     148 	ld	(bc), a
-                                    149 ;input.h:43: is->current_state |= ((button_state & J_LEFT) == J_LEFT) << btn_left;
-      00006C F8 03                  150 	ldhl	sp,	#3
-      00006E 7E                     151 	ld	a, (hl)
-      00006F E6 02                  152 	and	a, #0x02
-                                    153 ;	spillPairReg hl
-                                    154 ;	spillPairReg hl
-      000071 2E 00                  155 	ld	l, #0x00
-      000073 D6 02                  156 	sub	a, #0x02
-      000075 B5                     157 	or	a, l
-      000076 3E 01                  158 	ld	a, #0x01
-      000078 28 01                  159 	jr	Z, 00112$
-      00007A AF                     160 	xor	a, a
-      00007B                        161 00112$:
-      00007B CB 37                  162 	swap	a
-      00007D E6 F0                  163 	and	a, #0xf0
-      00007F B3                     164 	or	a, e
-      000080 5F                     165 	ld	e, a
-      000081 02                     166 	ld	(bc), a
-                                    167 ;input.h:44: is->current_state |= ((button_state & J_RIGHT) == J_RIGHT) << btn_right;
-      000082 F8 03                  168 	ldhl	sp,	#3
-      000084 7E                     169 	ld	a, (hl)
-      000085 E6 01                  170 	and	a, #0x01
-                                    171 ;	spillPairReg hl
-                                    172 ;	spillPairReg hl
-      000087 2E 00                  173 	ld	l, #0x00
-      000089 3D                     174 	dec	a
-      00008A B5                     175 	or	a, l
-      00008B 3E 01                  176 	ld	a, #0x01
-      00008D 28 01                  177 	jr	Z, 00114$
-      00008F AF                     178 	xor	a, a
-      000090                        179 00114$:
-      000090 CB 37                  180 	swap	a
-      000092 07                     181 	rlca
-      000093 E6 E0                  182 	and	a, #0xe0
-      000095 B3                     183 	or	a, e
-      000096 5F                     184 	ld	e, a
-      000097 02                     185 	ld	(bc), a
-                                    186 ;input.h:45: is->current_state |= ((button_state & J_START) == J_START) << btn_start;
-      000098 F8 03                  187 	ldhl	sp,	#3
-      00009A 7E                     188 	ld	a, (hl)
-      00009B E6 80                  189 	and	a, #0x80
-                                    190 ;	spillPairReg hl
-                                    191 ;	spillPairReg hl
-      00009D 2E 00                  192 	ld	l, #0x00
-      00009F D6 80                  193 	sub	a, #0x80
-      0000A1 B5                     194 	or	a, l
-      0000A2 3E 01                  195 	ld	a, #0x01
-      0000A4 28 01                  196 	jr	Z, 00116$
-      0000A6 AF                     197 	xor	a, a
-      0000A7                        198 00116$:
-      0000A7 0F                     199 	rrca
-      0000A8 0F                     200 	rrca
-      0000A9 E6 C0                  201 	and	a, #0xc0
-      0000AB B3                     202 	or	a, e
-      0000AC 5F                     203 	ld	e, a
-      0000AD 02                     204 	ld	(bc), a
-                                    205 ;input.h:46: is->current_state |= ((button_state & J_SELECT) == J_SELECT) << btn_select;
-      0000AE F8 03                  206 	ldhl	sp,	#3
-      0000B0 7E                     207 	ld	a, (hl)
-      0000B1 E6 40                  208 	and	a, #0x40
-                                    209 ;	spillPairReg hl
-                                    210 ;	spillPairReg hl
-      0000B3 2E 00                  211 	ld	l, #0x00
-      0000B5 D6 40                  212 	sub	a, #0x40
-      0000B7 B5                     213 	or	a, l
-      0000B8 3E 01                  214 	ld	a, #0x01
-      0000BA 28 01                  215 	jr	Z, 00118$
-      0000BC AF                     216 	xor	a, a
-      0000BD                        217 00118$:
-      0000BD 0F                     218 	rrca
-      0000BE E6 80                  219 	and	a, #0x80
-      0000C0 B3                     220 	or	a, e
-      0000C1 57                     221 	ld	d, a
-      0000C2 02                     222 	ld	(bc), a
-                                    223 ;input.h:49: is->held_buttons = is->previous_state & is->current_state;
-      0000C3 C1                     224 	pop	bc
-      0000C4 C5                     225 	push	bc
-      0000C5 03                     226 	inc	bc
-      0000C6 03                     227 	inc	bc
-      0000C7 F8 02                  228 	ldhl	sp,	#2
-                                    229 ;input.h:52: is->depressed_buttons = (is->current_state ^ is->held_buttons);
-                                    230 ;input.h:55: is->released_buttons = (is->previous_state ^ is->held_buttons);
-      0000C9 3A                     231 	ld	a, (hl-)
-      0000CA 2B                     232 	dec	hl
-      0000CB A2                     233 	and	a, d
-      0000CC 5F                     234 	ld	e, a
-      0000CD 02                     235 	ld	(bc), a
-      0000CE C1                     236 	pop	bc
-      0000CF C5                     237 	push	bc
-      0000D0 03                     238 	inc	bc
-      0000D1 03                     239 	inc	bc
-      0000D2 03                     240 	inc	bc
-      0000D3 7A                     241 	ld	a, d
-      0000D4 AB                     242 	xor	a, e
-      0000D5 02                     243 	ld	(bc), a
-      0000D6 D5                     244 	push	de
-      0000D7 2A                     245 	ld	a, (hl+)
-      0000D8 5F                     246 	ld	e, a
-      0000D9 56                     247 	ld	d, (hl)
-      0000DA 21 04 00               248 	ld	hl, #0x0004
-      0000DD 19                     249 	add	hl, de
-      0000DE D1                     250 	pop	de
-      0000DF 4D                     251 	ld	c, l
-      0000E0 44                     252 	ld	b, h
-      0000E1 F8 02                  253 	ldhl	sp,	#2
-      0000E3 7E                     254 	ld	a, (hl)
-      0000E4 AB                     255 	xor	a, e
-      0000E5 02                     256 	ld	(bc), a
-                                    257 ;input.h:56: }
-      0000E6 E8 05                  258 	add	sp, #5
-      0000E8 C9                     259 	ret
-      0000E9                        260 _SCREEN_MIN_X:
-      0000E9 08                     261 	.db #0x08	; 8
-      0000EA                        262 _SCREEN_MIN_Y:
-      0000EA 10                     263 	.db #0x10	; 16
-      0000EB                        264 _SCREEN_WIDTH:
-      0000EB A0                     265 	.db #0xa0	; 160
-      0000EC                        266 _SCREEN_HEIGHT:
-      0000EC 90                     267 	.db #0x90	; 144
-      0000ED                        268 _SPRITE_TILE_WIDTH:
-      0000ED 08                     269 	.db #0x08	; 8
-      0000EE                        270 _SPRITE_TILE_HEIGHT:
-      0000EE 08                     271 	.db #0x08	; 8
-                                    272 ;input.h:60: uint8_t was_input_depressed(struct input_state* is, uint8_t button)
-                                    273 ;	---------------------------------
-                                    274 ; Function was_input_depressed
-                                    275 ; ---------------------------------
-      0000EF                        276 _was_input_depressed::
-                                    277 ;input.h:62: return (is->depressed_buttons & (1 << button)) != 0x00;
-      0000EF F8 02                  278 	ldhl	sp,	#2
-      0000F1 2A                     279 	ld	a, (hl+)
-      0000F2 4F                     280 	ld	c, a
-      0000F3 2A                     281 	ld	a, (hl+)
-      0000F4 47                     282 	ld	b, a
-      0000F5 03                     283 	inc	bc
-      0000F6 03                     284 	inc	bc
-      0000F7 03                     285 	inc	bc
-      0000F8 0A                     286 	ld	a, (bc)
-      0000F9 4E                     287 	ld	c, (hl)
-      0000FA 21 01 00               288 	ld	hl, #0x0001
-      0000FD 0C                     289 	inc	c
-      0000FE 18 01                  290 	jr	00104$
-      000100                        291 00103$:
-      000100 29                     292 	add	hl, hl
-      000101                        293 00104$:
-      000101 0D                     294 	dec	c
-      000102 20 FC                  295 	jr	NZ,00103$
-      000104 0E 00                  296 	ld	c, #0x00
-      000106 A5                     297 	and	a, l
-      000107 5F                     298 	ld	e, a
-      000108 79                     299 	ld	a, c
-      000109 A4                     300 	and	a, h
-      00010A B3                     301 	or	a, e
-      00010B D6 01                  302 	sub	a,#0x01
-      00010D 3E 00                  303 	ld	a, #0x00
-      00010F 17                     304 	rla
-      000110 EE 01                  305 	xor	a, #0x01
-      000112 5F                     306 	ld	e, a
-                                    307 ;input.h:63: }
-      000113 C9                     308 	ret
-                                    309 ;input.h:65: uint8_t was_input_released(struct input_state* is, uint8_t button)
-                                    310 ;	---------------------------------
-                                    311 ; Function was_input_released
-                                    312 ; ---------------------------------
-      000114                        313 _was_input_released::
-                                    314 ;input.h:67: return (is->released_buttons & (1 << button)) != 0x00;
-      000114 F8 02                  315 	ldhl	sp,	#2
-      000116 2A                     316 	ld	a, (hl+)
-      000117 4F                     317 	ld	c, a
-      000118 2A                     318 	ld	a, (hl+)
-      000119 47                     319 	ld	b, a
-      00011A 03                     320 	inc	bc
-      00011B 03                     321 	inc	bc
-      00011C 03                     322 	inc	bc
-      00011D 03                     323 	inc	bc
-      00011E 0A                     324 	ld	a, (bc)
-      00011F 4E                     325 	ld	c, (hl)
-      000120 21 01 00               326 	ld	hl, #0x0001
-      000123 0C                     327 	inc	c
-      000124 18 01                  328 	jr	00104$
-      000126                        329 00103$:
-      000126 29                     330 	add	hl, hl
-      000127                        331 00104$:
-      000127 0D                     332 	dec	c
-      000128 20 FC                  333 	jr	NZ,00103$
-      00012A 0E 00                  334 	ld	c, #0x00
-      00012C A5                     335 	and	a, l
-      00012D 5F                     336 	ld	e, a
-      00012E 79                     337 	ld	a, c
-      00012F A4                     338 	and	a, h
-      000130 B3                     339 	or	a, e
-      000131 D6 01                  340 	sub	a,#0x01
-      000133 3E 00                  341 	ld	a, #0x00
-      000135 17                     342 	rla
-      000136 EE 01                  343 	xor	a, #0x01
-      000138 5F                     344 	ld	e, a
-                                    345 ;input.h:68: }
-      000139 C9                     346 	ret
-                                    347 ;input.h:70: uint8_t is_input_held(struct input_state* is, uint8_t button)
-                                    348 ;	---------------------------------
-                                    349 ; Function is_input_held
-                                    350 ; ---------------------------------
-      00013A                        351 _is_input_held::
-                                    352 ;input.h:72: return (is->held_buttons & (1 << button)) != 0x00;
-      00013A F8 02                  353 	ldhl	sp,	#2
-      00013C 2A                     354 	ld	a, (hl+)
-      00013D 4F                     355 	ld	c, a
-      00013E 2A                     356 	ld	a, (hl+)
-      00013F 47                     357 	ld	b, a
-      000140 03                     358 	inc	bc
-      000141 03                     359 	inc	bc
-      000142 0A                     360 	ld	a, (bc)
-      000143 4E                     361 	ld	c, (hl)
-      000144 21 01 00               362 	ld	hl, #0x0001
-      000147 0C                     363 	inc	c
-      000148 18 01                  364 	jr	00104$
-      00014A                        365 00103$:
-      00014A 29                     366 	add	hl, hl
-      00014B                        367 00104$:
-      00014B 0D                     368 	dec	c
-      00014C 20 FC                  369 	jr	NZ,00103$
-      00014E 0E 00                  370 	ld	c, #0x00
-      000150 A5                     371 	and	a, l
-      000151 5F                     372 	ld	e, a
-      000152 79                     373 	ld	a, c
-      000153 A4                     374 	and	a, h
-      000154 B3                     375 	or	a, e
-      000155 D6 01                  376 	sub	a,#0x01
-      000157 3E 00                  377 	ld	a, #0x00
-      000159 17                     378 	rla
-      00015A EE 01                  379 	xor	a, #0x01
-      00015C 5F                     380 	ld	e, a
-                                    381 ;input.h:73: }
-      00015D C9                     382 	ret
-                                    383 ;utility.h:8: void wait_vbls_done(uint8_t num_loops)
-                                    384 ;	---------------------------------
-                                    385 ; Function wait_vbls_done
-                                    386 ; ---------------------------------
-      00015E                        387 _wait_vbls_done::
-                                    388 ;utility.h:10: for (uint8_t loop_counter = 0; loop_counter < num_loops; ++loop_counter)
-      00015E 0E 00                  389 	ld	c, #0x00
-      000160                        390 00103$:
-      000160 79                     391 	ld	a, c
-      000161 F8 02                  392 	ldhl	sp,	#2
-      000163 96                     393 	sub	a, (hl)
-      000164 D0                     394 	ret	NC
-                                    395 ;utility.h:12: wait_vbl_done();
-      000165 CDr00r00               396 	call	_wait_vbl_done
-                                    397 ;utility.h:10: for (uint8_t loop_counter = 0; loop_counter < num_loops; ++loop_counter)
-      000168 0C                     398 	inc	c
-                                    399 ;utility.h:14: }
-      000169 18 F5                  400 	jr	00103$
-                                    401 ;main.c:10: int main()
-                                    402 ;	---------------------------------
-                                    403 ; Function main
-                                    404 ; ---------------------------------
-      00016B                        405 _main::
-                                    406 ;main.c:13: set_sprite_data(0, 38, basic_font_sprites);
-      00016B 11r00r00               407 	ld	de, #_basic_font_sprites
-      00016E D5                     408 	push	de
-      00016F 21 00 26               409 	ld	hl, #0x2600
-      000172 E5                     410 	push	hl
-      000173 CDr00r00               411 	call	_set_sprite_data
-      000176 E8 04                  412 	add	sp, #4
-                                    413 ;main.c:20: SPRITE_TILE_WIDTH,
-      000178 21rEDr00               414 	ld	hl, #_SPRITE_TILE_WIDTH
-      00017B 46                     415 	ld	b, (hl)
-                                    416 ;main.c:19: SCREEN_MIN_Y + (3 * SPRITE_TILE_HEIGHT),
-      00017C FArEEr00               417 	ld	a, (#_SPRITE_TILE_HEIGHT)
-      00017F 5F                     418 	ld	e, a
-      000180 87                     419 	add	a, a
-      000181 83                     420 	add	a, e
-      000182 21rEAr00               421 	ld	hl, #_SCREEN_MIN_Y
-      000185 4E                     422 	ld	c, (hl)
-      000186 81                     423 	add	a, c
-      000187 4F                     424 	ld	c, a
-                                    425 ;main.c:18: SCREEN_MIN_X + (5 * SPRITE_TILE_WIDTH),
-      000188 78                     426 	ld	a, b
-      000189 5F                     427 	ld	e, a
-      00018A 87                     428 	add	a, a
-      00018B 87                     429 	add	a, a
-      00018C 83                     430 	add	a, e
-      00018D 21rE9r00               431 	ld	hl, #_SCREEN_MIN_X
-      000190 5E                     432 	ld	e, (hl)
-      000191 83                     433 	add	a, e
-      000192 5F                     434 	ld	e, a
-                                    435 ;main.c:15: draw_basic_font_word(&k_gridwalker_word_sprites[0],
-      000193 AF                     436 	xor	a, a
-      000194 F5                     437 	push	af
-      000195 33                     438 	inc	sp
-      000196 C5                     439 	push	bc
-      000197 33                     440 	inc	sp
-      000198 51                     441 	ld	d, c
-      000199 D5                     442 	push	de
-      00019A 21 0A 00               443 	ld	hl, #0x0a
-      00019D E5                     444 	push	hl
-      00019E 11r00r00               445 	ld	de, #_k_gridwalker_word_sprites
-      0001A1 D5                     446 	push	de
-      0001A2 CDr00r00               447 	call	_draw_basic_font_word
-      0001A5 E8 08                  448 	add	sp, #8
-                                    449 ;main.c:28: SPRITE_TILE_WIDTH,
-      0001A7 21rEDr00               450 	ld	hl, #_SPRITE_TILE_WIDTH
-      0001AA 46                     451 	ld	b, (hl)
-                                    452 ;main.c:27: SCREEN_MIN_Y + (10 * SPRITE_TILE_HEIGHT),
-      0001AB FArEEr00               453 	ld	a, (#_SPRITE_TILE_HEIGHT)
-      0001AE 5F                     454 	ld	e, a
-      0001AF 87                     455 	add	a, a
-      0001B0 87                     456 	add	a, a
-      0001B1 83                     457 	add	a, e
-      0001B2 87                     458 	add	a, a
-      0001B3 21rEAr00               459 	ld	hl, #_SCREEN_MIN_Y
-      0001B6 4E                     460 	ld	c, (hl)
-      0001B7 81                     461 	add	a, c
-      0001B8 4F                     462 	ld	c, a
-                                    463 ;main.c:26: SCREEN_MIN_X + (6 * SPRITE_TILE_WIDTH),
-      0001B9 78                     464 	ld	a, b
-      0001BA 5F                     465 	ld	e, a
-      0001BB 87                     466 	add	a, a
-      0001BC 83                     467 	add	a, e
-      0001BD 87                     468 	add	a, a
-      0001BE 21rE9r00               469 	ld	hl, #_SCREEN_MIN_X
-      0001C1 5E                     470 	ld	e, (hl)
-      0001C2 83                     471 	add	a, e
-      0001C3 5F                     472 	ld	e, a
-                                    473 ;main.c:23: draw_basic_font_word(&k_new_game_word_sprites[0],
-      0001C4 AF                     474 	xor	a, a
-      0001C5 F5                     475 	push	af
-      0001C6 33                     476 	inc	sp
-      0001C7 C5                     477 	push	bc
-      0001C8 33                     478 	inc	sp
-      0001C9 51                     479 	ld	d, c
-      0001CA D5                     480 	push	de
-      0001CB 21 08 0A               481 	ld	hl, #0xa08
-      0001CE E5                     482 	push	hl
-      0001CF 11r00r00               483 	ld	de, #_k_new_game_word_sprites
-      0001D2 D5                     484 	push	de
-      0001D3 CDr00r00               485 	call	_draw_basic_font_word
-      0001D6 E8 08                  486 	add	sp, #8
-                                    487 ;main.c:36: SPRITE_TILE_WIDTH,
-      0001D8 21rEDr00               488 	ld	hl, #_SPRITE_TILE_WIDTH
-      0001DB 46                     489 	ld	b, (hl)
-                                    490 ;main.c:35: SCREEN_MIN_Y + (12 * SPRITE_TILE_HEIGHT),
-      0001DC FArEEr00               491 	ld	a, (#_SPRITE_TILE_HEIGHT)
-      0001DF 5F                     492 	ld	e, a
-      0001E0 87                     493 	add	a, a
-      0001E1 83                     494 	add	a, e
-      0001E2 87                     495 	add	a, a
-      0001E3 87                     496 	add	a, a
-      0001E4 21rEAr00               497 	ld	hl, #_SCREEN_MIN_Y
-      0001E7 4E                     498 	ld	c, (hl)
-      0001E8 81                     499 	add	a, c
-      0001E9 4F                     500 	ld	c, a
-                                    501 ;main.c:34: SCREEN_MIN_X + (6 * SPRITE_TILE_WIDTH),
-      0001EA 78                     502 	ld	a, b
-      0001EB 5F                     503 	ld	e, a
-      0001EC 87                     504 	add	a, a
-      0001ED 83                     505 	add	a, e
-      0001EE 87                     506 	add	a, a
-      0001EF 21rE9r00               507 	ld	hl, #_SCREEN_MIN_X
-      0001F2 5E                     508 	ld	e, (hl)
-      0001F3 83                     509 	add	a, e
-      0001F4 5F                     510 	ld	e, a
-                                    511 ;main.c:31: draw_basic_font_word(&k_continue_word_sprites[0],
-      0001F5 AF                     512 	xor	a, a
-      0001F6 F5                     513 	push	af
-      0001F7 33                     514 	inc	sp
-      0001F8 C5                     515 	push	bc
-      0001F9 33                     516 	inc	sp
-      0001FA 51                     517 	ld	d, c
-      0001FB D5                     518 	push	de
-      0001FC 21 08 12               519 	ld	hl, #0x1208
-      0001FF E5                     520 	push	hl
-      000200 11r00r00               521 	ld	de, #_k_continue_word_sprites
-      000203 D5                     522 	push	de
-      000204 CDr00r00               523 	call	_draw_basic_font_word
-      000207 E8 08                  524 	add	sp, #8
-                                    525 ;main.c:39: SHOW_SPRITES;
-      000209 F0r00                  526 	ldh	a, (_LCDC_REG + 0)
-      00020B F6 02                  527 	or	a, #0x02
-      00020D E0r00                  528 	ldh	(_LCDC_REG + 0), a
-                                    529 ;main.c:40: DISPLAY_ON;
-      00020F F0r00                  530 	ldh	a, (_LCDC_REG + 0)
-      000211 F6 80                  531 	or	a, #0x80
-      000213 E0r00                  532 	ldh	(_LCDC_REG + 0), a
-                                    533 ;main.c:42: while (1)
-      000215                        534 00102$:
-                                    535 ;main.c:44: wait_vbls_done(1);
-      000215 3E 01                  536 	ld	a, #0x01
-      000217 F5                     537 	push	af
-      000218 33                     538 	inc	sp
-      000219 CDr5Er01               539 	call	_wait_vbls_done
-      00021C 33                     540 	inc	sp
-                                    541 ;main.c:46: }
-      00021D 18 F6                  542 	jr	00102$
-                                    543 	.area _CODE
-                                    544 	.area _INITIALIZER
-                                    545 	.area _CABS (ABS)
+                                     45 ; ram data
+                                     46 ;--------------------------------------------------------
+                                     47 	.area _INITIALIZED
+                                     48 ;--------------------------------------------------------
+                                     49 ; absolute external ram data
+                                     50 ;--------------------------------------------------------
+                                     51 	.area _DABS (ABS)
+                                     52 ;--------------------------------------------------------
+                                     53 ; global & static initialisations
+                                     54 ;--------------------------------------------------------
+                                     55 	.area _HOME
+                                     56 	.area _GSINIT
+                                     57 	.area _GSFINAL
+                                     58 	.area _GSINIT
+                                     59 ;--------------------------------------------------------
+                                     60 ; Home
+                                     61 ;--------------------------------------------------------
+                                     62 	.area _HOME
+                                     63 	.area _HOME
+                                     64 ;--------------------------------------------------------
+                                     65 ; code
+                                     66 ;--------------------------------------------------------
+                                     67 	.area _CODE
+                                     68 ;utility.h:8: void wait_vbls_done(uint8_t num_loops)
+                                     69 ;	---------------------------------
+                                     70 ; Function wait_vbls_done
+                                     71 ; ---------------------------------
+      000000                         72 _wait_vbls_done::
+                                     73 ;utility.h:10: for (uint8_t loop_counter = 0; loop_counter < num_loops; ++loop_counter)
+      000000 0E 00                   74 	ld	c, #0x00
+      000002                         75 00103$:
+      000002 79                      76 	ld	a, c
+      000003 F8 02                   77 	ldhl	sp,	#2
+      000005 96                      78 	sub	a, (hl)
+      000006 D0                      79 	ret	NC
+                                     80 ;utility.h:12: wait_vbl_done();
+      000007 CDr00r00                81 	call	_wait_vbl_done
+                                     82 ;utility.h:10: for (uint8_t loop_counter = 0; loop_counter < num_loops; ++loop_counter)
+      00000A 0C                      83 	inc	c
+                                     84 ;utility.h:14: }
+      00000B 18 F5                   85 	jr	00103$
+      00000D                         86 _SCREEN_MIN_X:
+      00000D 08                      87 	.db #0x08	; 8
+      00000E                         88 _SCREEN_MIN_Y:
+      00000E 10                      89 	.db #0x10	; 16
+      00000F                         90 _SCREEN_WIDTH:
+      00000F A0                      91 	.db #0xa0	; 160
+      000010                         92 _SCREEN_HEIGHT:
+      000010 90                      93 	.db #0x90	; 144
+      000011                         94 _SPRITE_TILE_WIDTH:
+      000011 08                      95 	.db #0x08	; 8
+      000012                         96 _SPRITE_TILE_HEIGHT:
+      000012 08                      97 	.db #0x08	; 8
+                                     98 ;main.c:18: int main()
+                                     99 ;	---------------------------------
+                                    100 ; Function main
+                                    101 ; ---------------------------------
+      000013                        102 _main::
+      000013 E8 C6                  103 	add	sp, #-58
+                                    104 ;main.c:20: SHOW_SPRITES;
+      000015 F0r00                  105 	ldh	a, (_LCDC_REG + 0)
+      000017 F6 02                  106 	or	a, #0x02
+      000019 E0r00                  107 	ldh	(_LCDC_REG + 0), a
+                                    108 ;main.c:21: DISPLAY_ON;
+      00001B F0r00                  109 	ldh	a, (_LCDC_REG + 0)
+      00001D F6 80                  110 	or	a, #0x80
+      00001F E0r00                  111 	ldh	(_LCDC_REG + 0), a
+                                    112 ;main.c:24: input_state.current_state = 0x00;
+      000021 F8 00                  113 	ldhl	sp,	#0
+      000023 4D                     114 	ld	c, l
+      000024 44                     115 	ld	b, h
+      000025 59                     116 	ld	e, c
+      000026 50                     117 	ld	d, b
+      000027 13                     118 	inc	de
+      000028 AF                     119 	xor	a, a
+      000029 12                     120 	ld	(de), a
+                                    121 ;main.c:25: input_state.previous_state = 0x00;
+      00002A AF                     122 	xor	a, a
+      00002B 02                     123 	ld	(bc), a
+                                    124 ;main.c:26: input_state.depressed_buttons = 0x00;
+      00002C 59                     125 	ld	e, c
+      00002D 50                     126 	ld	d, b
+      00002E 13                     127 	inc	de
+      00002F 13                     128 	inc	de
+      000030 13                     129 	inc	de
+      000031 AF                     130 	xor	a, a
+      000032 12                     131 	ld	(de), a
+                                    132 ;main.c:27: input_state.held_buttons = 0x00;
+      000033 59                     133 	ld	e, c
+      000034 50                     134 	ld	d, b
+      000035 13                     135 	inc	de
+      000036 13                     136 	inc	de
+      000037 AF                     137 	xor	a, a
+      000038 12                     138 	ld	(de), a
+                                    139 ;main.c:28: input_state.released_buttons = 0x00;
+      000039 21 04 00               140 	ld	hl, #0x0004
+      00003C 09                     141 	add	hl, bc
+      00003D 36 00                  142 	ld	(hl), #0x00
+                                    143 ;main.c:30: void (*enter_state_funcs[7])() =
+      00003F F8 05                  144 	ldhl	sp,	#5
+      000041 7D                     145 	ld	a, l
+      000042 54                     146 	ld	d, h
+      000043 F8 2F                  147 	ldhl	sp,	#47
+      000045 22                     148 	ld	(hl+), a
+      000046 7A                     149 	ld	a, d
+      000047 32                     150 	ld	(hl-), a
+      000048 2A                     151 	ld	a,	(hl+)
+      000049 66                     152 	ld	h, (hl)
+      00004A 6F                     153 	ld	l, a
+      00004B 36r00                  154 	ld	(hl), #<(_splash_enter)
+      00004D 23                     155 	inc	hl
+      00004E 36s00                  156 	ld	(hl), #>(_splash_enter)
+      000050 F8 2F                  157 	ldhl	sp,	#47
+      000052 2A                     158 	ld	a, (hl+)
+      000053 5F                     159 	ld	e, a
+      000054 3A                     160 	ld	a, (hl-)
+      000055 57                     161 	ld	d, a
+      000056 13                     162 	inc	de
+      000057 13                     163 	inc	de
+      000058 3Er00                  164 	ld	a, #<(_title_enter)
+      00005A 12                     165 	ld	(de), a
+      00005B 13                     166 	inc	de
+      00005C 3Es00                  167 	ld	a, #>(_title_enter)
+      00005E 12                     168 	ld	(de), a
+      00005F 2A                     169 	ld	a, (hl+)
+      000060 5F                     170 	ld	e, a
+      000061 56                     171 	ld	d, (hl)
+      000062 21 04 00               172 	ld	hl, #0x0004
+      000065 19                     173 	add	hl, de
+      000066 5D                     174 	ld	e, l
+      000067 54                     175 	ld	d, h
+      000068 36r00                  176 	ld	(hl), #<(_password_enter)
+      00006A 13                     177 	inc	de
+      00006B 3Es00                  178 	ld	a, #>(_password_enter)
+      00006D 12                     179 	ld	(de), a
+      00006E F8 2F                  180 	ldhl	sp,#47
+      000070 2A                     181 	ld	a, (hl+)
+      000071 5F                     182 	ld	e, a
+      000072 56                     183 	ld	d, (hl)
+      000073 21 06 00               184 	ld	hl, #0x0006
+      000076 19                     185 	add	hl, de
+      000077 5D                     186 	ld	e, l
+      000078 54                     187 	ld	d, h
+      000079 36r00                  188 	ld	(hl), #<(_chapter_intro_enter)
+      00007B 13                     189 	inc	de
+      00007C 3Es00                  190 	ld	a, #>(_chapter_intro_enter)
+      00007E 12                     191 	ld	(de), a
+      00007F F8 2F                  192 	ldhl	sp,#47
+      000081 2A                     193 	ld	a, (hl+)
+      000082 5F                     194 	ld	e, a
+      000083 56                     195 	ld	d, (hl)
+      000084 21 08 00               196 	ld	hl, #0x0008
+      000087 19                     197 	add	hl, de
+      000088 5D                     198 	ld	e, l
+      000089 54                     199 	ld	d, h
+      00008A 36r00                  200 	ld	(hl), #<(_game_enter)
+      00008C 13                     201 	inc	de
+      00008D 3Es00                  202 	ld	a, #>(_game_enter)
+      00008F 12                     203 	ld	(de), a
+      000090 F8 2F                  204 	ldhl	sp,#47
+      000092 2A                     205 	ld	a, (hl+)
+      000093 5F                     206 	ld	e, a
+      000094 56                     207 	ld	d, (hl)
+      000095 21 0A 00               208 	ld	hl, #0x000a
+      000098 19                     209 	add	hl, de
+      000099 5D                     210 	ld	e, l
+      00009A 54                     211 	ld	d, h
+      00009B 36r00                  212 	ld	(hl), #<(_pause_enter)
+      00009D 13                     213 	inc	de
+      00009E 3Es00                  214 	ld	a, #>(_pause_enter)
+      0000A0 12                     215 	ld	(de), a
+      0000A1 F8 2F                  216 	ldhl	sp,#47
+      0000A3 2A                     217 	ld	a, (hl+)
+      0000A4 5F                     218 	ld	e, a
+      0000A5 56                     219 	ld	d, (hl)
+      0000A6 21 0C 00               220 	ld	hl, #0x000c
+      0000A9 19                     221 	add	hl, de
+      0000AA 5D                     222 	ld	e, l
+      0000AB 54                     223 	ld	d, h
+      0000AC 36r00                  224 	ld	(hl), #<(_credits_enter)
+      0000AE 13                     225 	inc	de
+      0000AF 3Es00                  226 	ld	a, #>(_credits_enter)
+      0000B1 12                     227 	ld	(de), a
+                                    228 ;main.c:41: uint8_t (*update_state_funcs[7])(struct input_state*) =
+      0000B2 F8 13                  229 	ldhl	sp,	#19
+      0000B4 7D                     230 	ld	a, l
+      0000B5 54                     231 	ld	d, h
+      0000B6 F8 31                  232 	ldhl	sp,	#49
+      0000B8 22                     233 	ld	(hl+), a
+      0000B9 7A                     234 	ld	a, d
+      0000BA 32                     235 	ld	(hl-), a
+      0000BB 2A                     236 	ld	a,	(hl+)
+      0000BC 66                     237 	ld	h, (hl)
+      0000BD 6F                     238 	ld	l, a
+      0000BE 36r00                  239 	ld	(hl), #<(_splash_update)
+      0000C0 23                     240 	inc	hl
+      0000C1 36s00                  241 	ld	(hl), #>(_splash_update)
+      0000C3 F8 31                  242 	ldhl	sp,	#49
+      0000C5 2A                     243 	ld	a, (hl+)
+      0000C6 5F                     244 	ld	e, a
+      0000C7 3A                     245 	ld	a, (hl-)
+      0000C8 57                     246 	ld	d, a
+      0000C9 13                     247 	inc	de
+      0000CA 13                     248 	inc	de
+      0000CB 3Er00                  249 	ld	a, #<(_title_update)
+      0000CD 12                     250 	ld	(de), a
+      0000CE 13                     251 	inc	de
+      0000CF 3Es00                  252 	ld	a, #>(_title_update)
+      0000D1 12                     253 	ld	(de), a
+      0000D2 2A                     254 	ld	a, (hl+)
+      0000D3 5F                     255 	ld	e, a
+      0000D4 56                     256 	ld	d, (hl)
+      0000D5 21 04 00               257 	ld	hl, #0x0004
+      0000D8 19                     258 	add	hl, de
+      0000D9 5D                     259 	ld	e, l
+      0000DA 54                     260 	ld	d, h
+      0000DB 36r00                  261 	ld	(hl), #<(_password_update)
+      0000DD 13                     262 	inc	de
+      0000DE 3Es00                  263 	ld	a, #>(_password_update)
+      0000E0 12                     264 	ld	(de), a
+      0000E1 F8 31                  265 	ldhl	sp,#49
+      0000E3 2A                     266 	ld	a, (hl+)
+      0000E4 5F                     267 	ld	e, a
+      0000E5 56                     268 	ld	d, (hl)
+      0000E6 21 06 00               269 	ld	hl, #0x0006
+      0000E9 19                     270 	add	hl, de
+      0000EA 5D                     271 	ld	e, l
+      0000EB 54                     272 	ld	d, h
+      0000EC 36r00                  273 	ld	(hl), #<(_chapter_intro_update)
+      0000EE 13                     274 	inc	de
+      0000EF 3Es00                  275 	ld	a, #>(_chapter_intro_update)
+      0000F1 12                     276 	ld	(de), a
+      0000F2 F8 31                  277 	ldhl	sp,#49
+      0000F4 2A                     278 	ld	a, (hl+)
+      0000F5 5F                     279 	ld	e, a
+      0000F6 56                     280 	ld	d, (hl)
+      0000F7 21 08 00               281 	ld	hl, #0x0008
+      0000FA 19                     282 	add	hl, de
+      0000FB 5D                     283 	ld	e, l
+      0000FC 54                     284 	ld	d, h
+      0000FD 36r00                  285 	ld	(hl), #<(_game_update)
+      0000FF 13                     286 	inc	de
+      000100 3Es00                  287 	ld	a, #>(_game_update)
+      000102 12                     288 	ld	(de), a
+      000103 F8 31                  289 	ldhl	sp,#49
+      000105 2A                     290 	ld	a, (hl+)
+      000106 5F                     291 	ld	e, a
+      000107 56                     292 	ld	d, (hl)
+      000108 21 0A 00               293 	ld	hl, #0x000a
+      00010B 19                     294 	add	hl, de
+      00010C 5D                     295 	ld	e, l
+      00010D 54                     296 	ld	d, h
+      00010E 36r00                  297 	ld	(hl), #<(_pause_update)
+      000110 13                     298 	inc	de
+      000111 3Es00                  299 	ld	a, #>(_pause_update)
+      000113 12                     300 	ld	(de), a
+      000114 F8 31                  301 	ldhl	sp,#49
+      000116 2A                     302 	ld	a, (hl+)
+      000117 5F                     303 	ld	e, a
+      000118 56                     304 	ld	d, (hl)
+      000119 21 0C 00               305 	ld	hl, #0x000c
+      00011C 19                     306 	add	hl, de
+      00011D 5D                     307 	ld	e, l
+      00011E 54                     308 	ld	d, h
+      00011F 36r00                  309 	ld	(hl), #<(_credits_update)
+      000121 13                     310 	inc	de
+      000122 3Es00                  311 	ld	a, #>(_credits_update)
+      000124 12                     312 	ld	(de), a
+                                    313 ;main.c:52: void (*exit_state_funcs[7])() =
+      000125 F8 21                  314 	ldhl	sp,	#33
+      000127 7D                     315 	ld	a, l
+      000128 54                     316 	ld	d, h
+      000129 F8 33                  317 	ldhl	sp,	#51
+      00012B 22                     318 	ld	(hl+), a
+      00012C 7A                     319 	ld	a, d
+      00012D 32                     320 	ld	(hl-), a
+      00012E 2A                     321 	ld	a,	(hl+)
+      00012F 66                     322 	ld	h, (hl)
+      000130 6F                     323 	ld	l, a
+      000131 36r00                  324 	ld	(hl), #<(_splash_exit)
+      000133 23                     325 	inc	hl
+      000134 36s00                  326 	ld	(hl), #>(_splash_exit)
+      000136 F8 33                  327 	ldhl	sp,	#51
+      000138 2A                     328 	ld	a, (hl+)
+      000139 5F                     329 	ld	e, a
+      00013A 3A                     330 	ld	a, (hl-)
+      00013B 57                     331 	ld	d, a
+      00013C 13                     332 	inc	de
+      00013D 13                     333 	inc	de
+      00013E 3Er00                  334 	ld	a, #<(_title_exit)
+      000140 12                     335 	ld	(de), a
+      000141 13                     336 	inc	de
+      000142 3Es00                  337 	ld	a, #>(_title_exit)
+      000144 12                     338 	ld	(de), a
+      000145 2A                     339 	ld	a, (hl+)
+      000146 5F                     340 	ld	e, a
+      000147 56                     341 	ld	d, (hl)
+      000148 21 04 00               342 	ld	hl, #0x0004
+      00014B 19                     343 	add	hl, de
+      00014C 5D                     344 	ld	e, l
+      00014D 54                     345 	ld	d, h
+      00014E 36r00                  346 	ld	(hl), #<(_password_exit)
+      000150 13                     347 	inc	de
+      000151 3Es00                  348 	ld	a, #>(_password_exit)
+      000153 12                     349 	ld	(de), a
+      000154 F8 33                  350 	ldhl	sp,#51
+      000156 2A                     351 	ld	a, (hl+)
+      000157 5F                     352 	ld	e, a
+      000158 56                     353 	ld	d, (hl)
+      000159 21 06 00               354 	ld	hl, #0x0006
+      00015C 19                     355 	add	hl, de
+      00015D 5D                     356 	ld	e, l
+      00015E 54                     357 	ld	d, h
+      00015F 36r00                  358 	ld	(hl), #<(_chapter_intro_exit)
+      000161 13                     359 	inc	de
+      000162 3Es00                  360 	ld	a, #>(_chapter_intro_exit)
+      000164 12                     361 	ld	(de), a
+      000165 F8 33                  362 	ldhl	sp,#51
+      000167 2A                     363 	ld	a, (hl+)
+      000168 5F                     364 	ld	e, a
+      000169 56                     365 	ld	d, (hl)
+      00016A 21 08 00               366 	ld	hl, #0x0008
+      00016D 19                     367 	add	hl, de
+      00016E 5D                     368 	ld	e, l
+      00016F 54                     369 	ld	d, h
+      000170 36r00                  370 	ld	(hl), #<(_game_exit)
+      000172 13                     371 	inc	de
+      000173 3Es00                  372 	ld	a, #>(_game_exit)
+      000175 12                     373 	ld	(de), a
+      000176 F8 33                  374 	ldhl	sp,#51
+      000178 2A                     375 	ld	a, (hl+)
+      000179 5F                     376 	ld	e, a
+      00017A 56                     377 	ld	d, (hl)
+      00017B 21 0A 00               378 	ld	hl, #0x000a
+      00017E 19                     379 	add	hl, de
+      00017F 5D                     380 	ld	e, l
+      000180 54                     381 	ld	d, h
+      000181 36r00                  382 	ld	(hl), #<(_pause_exit)
+      000183 13                     383 	inc	de
+      000184 3Es00                  384 	ld	a, #>(_pause_exit)
+      000186 12                     385 	ld	(de), a
+      000187 F8 33                  386 	ldhl	sp,#51
+      000189 2A                     387 	ld	a, (hl+)
+      00018A 5F                     388 	ld	e, a
+      00018B 56                     389 	ld	d, (hl)
+      00018C 21 0C 00               390 	ld	hl, #0x000c
+      00018F 19                     391 	add	hl, de
+      000190 5D                     392 	ld	e, l
+      000191 54                     393 	ld	d, h
+      000192 36r00                  394 	ld	(hl), #<(_credits_exit)
+      000194 13                     395 	inc	de
+      000195 3Es00                  396 	ld	a, #>(_credits_exit)
+      000197 12                     397 	ld	(de), a
+                                    398 ;main.c:63: uint8_t game_state = gs_title;
+      000198 F8 39                  399 	ldhl	sp,	#57
+      00019A 36 01                  400 	ld	(hl), #0x01
+                                    401 ;main.c:64: (enter_state_funcs[game_state])();
+      00019C C5                     402 	push	bc
+      00019D CDr00r00               403 	call	_title_enter
+      0001A0 C1                     404 	pop	bc
+                                    405 ;main.c:66: while (1)
+      0001A1                        406 00104$:
+                                    407 ;main.c:68: update_input_state(&input_state, joypad());
+      0001A1 CDr00r00               408 	call	_joypad
+      0001A4 7B                     409 	ld	a, e
+      0001A5 59                     410 	ld	e, c
+      0001A6 50                     411 	ld	d, b
+      0001A7 C5                     412 	push	bc
+      0001A8 F5                     413 	push	af
+      0001A9 33                     414 	inc	sp
+      0001AA D5                     415 	push	de
+      0001AB CDr00r00               416 	call	_update_input_state
+      0001AE E8 03                  417 	add	sp, #3
+      0001B0 C1                     418 	pop	bc
+                                    419 ;main.c:70: uint8_t next_game_state = (update_state_funcs[game_state])(&input_state);
+      0001B1 F8 39                  420 	ldhl	sp,	#57
+      0001B3 7E                     421 	ld	a, (hl)
+      0001B4 1E 00                  422 	ld	e, #0x00
+      0001B6 87                     423 	add	a, a
+      0001B7 CB 13                  424 	rl	e
+      0001B9 F8 35                  425 	ldhl	sp,	#53
+      0001BB 22                     426 	ld	(hl+), a
+      0001BC 73                     427 	ld	(hl), e
+      0001BD F8 31                  428 	ldhl	sp,#49
+      0001BF 2A                     429 	ld	a, (hl+)
+      0001C0 5F                     430 	ld	e, a
+      0001C1 56                     431 	ld	d, (hl)
+      0001C2 F8 35                  432 	ldhl	sp,	#53
+      0001C4 2A                     433 	ld	a,	(hl+)
+      0001C5 66                     434 	ld	h, (hl)
+      0001C6 6F                     435 	ld	l, a
+      0001C7 19                     436 	add	hl, de
+      0001C8 E5                     437 	push	hl
+      0001C9 7D                     438 	ld	a, l
+      0001CA F8 39                  439 	ldhl	sp,	#57
+      0001CC 77                     440 	ld	(hl), a
+      0001CD E1                     441 	pop	hl
+      0001CE 7C                     442 	ld	a, h
+      0001CF F8 38                  443 	ldhl	sp,	#56
+      0001D1 32                     444 	ld	(hl-), a
+      0001D2 2A                     445 	ld	a, (hl+)
+      0001D3 5F                     446 	ld	e, a
+      0001D4 56                     447 	ld	d, (hl)
+      0001D5 1A                     448 	ld	a, (de)
+      0001D6 6F                     449 	ld	l, a
+                                    450 ;	spillPairReg hl
+                                    451 ;	spillPairReg hl
+      0001D7 13                     452 	inc	de
+      0001D8 1A                     453 	ld	a, (de)
+      0001D9 67                     454 	ld	h, a
+                                    455 ;	spillPairReg hl
+                                    456 ;	spillPairReg hl
+      0001DA 59                     457 	ld	e, c
+      0001DB 50                     458 	ld	d, b
+      0001DC C5                     459 	push	bc
+      0001DD D5                     460 	push	de
+      0001DE CDr00r00               461 	call	___sdcc_call_hl
+      0001E1 E1                     462 	pop	hl
+      0001E2 7B                     463 	ld	a, e
+      0001E3 C1                     464 	pop	bc
+      0001E4 F8 37                  465 	ldhl	sp,	#55
+                                    466 ;main.c:71: if (next_game_state != game_state)
+      0001E6 22                     467 	ld	(hl+), a
+      0001E7 23                     468 	inc	hl
+      0001E8 3A                     469 	ld	a, (hl-)
+      0001E9 2B                     470 	dec	hl
+      0001EA 96                     471 	sub	a, (hl)
+      0001EB 28 4B                  472 	jr	Z, 00102$
+                                    473 ;main.c:73: (exit_state_funcs[game_state])();
+      0001ED F8 33                  474 	ldhl	sp,#51
+      0001EF 2A                     475 	ld	a, (hl+)
+      0001F0 5F                     476 	ld	e, a
+      0001F1 2A                     477 	ld	a, (hl+)
+      0001F2 57                     478 	ld	d, a
+      0001F3 2A                     479 	ld	a,	(hl+)
+      0001F4 66                     480 	ld	h, (hl)
+      0001F5 6F                     481 	ld	l, a
+      0001F6 19                     482 	add	hl, de
+      0001F7 E5                     483 	push	hl
+      0001F8 7D                     484 	ld	a, l
+      0001F9 F8 3A                  485 	ldhl	sp,	#58
+      0001FB 77                     486 	ld	(hl), a
+      0001FC E1                     487 	pop	hl
+      0001FD 7C                     488 	ld	a, h
+      0001FE F8 39                  489 	ldhl	sp,	#57
+      000200 32                     490 	ld	(hl-), a
+      000201 2A                     491 	ld	a, (hl+)
+      000202 5F                     492 	ld	e, a
+      000203 56                     493 	ld	d, (hl)
+      000204 1A                     494 	ld	a, (de)
+      000205 6F                     495 	ld	l, a
+                                    496 ;	spillPairReg hl
+                                    497 ;	spillPairReg hl
+      000206 13                     498 	inc	de
+      000207 1A                     499 	ld	a, (de)
+      000208 67                     500 	ld	h, a
+                                    501 ;	spillPairReg hl
+                                    502 ;	spillPairReg hl
+      000209 C5                     503 	push	bc
+      00020A CDr00r00               504 	call	___sdcc_call_hl
+      00020D C1                     505 	pop	bc
+                                    506 ;main.c:74: game_state = next_game_state;
+      00020E F8 37                  507 	ldhl	sp,	#55
+      000210 2A                     508 	ld	a, (hl+)
+      000211 23                     509 	inc	hl
+                                    510 ;main.c:75: (enter_state_funcs[game_state])();
+      000212 32                     511 	ld	(hl-), a
+      000213 2B                     512 	dec	hl
+      000214 7E                     513 	ld	a, (hl)
+      000215 16 00                  514 	ld	d, #0x00
+      000217 87                     515 	add	a, a
+      000218 CB 12                  516 	rl	d
+      00021A 5F                     517 	ld	e, a
+      00021B F8 2F                  518 	ldhl	sp,	#47
+      00021D 2A                     519 	ld	a,	(hl+)
+      00021E 66                     520 	ld	h, (hl)
+      00021F 6F                     521 	ld	l, a
+      000220 19                     522 	add	hl, de
+      000221 E5                     523 	push	hl
+      000222 7D                     524 	ld	a, l
+      000223 F8 39                  525 	ldhl	sp,	#57
+      000225 77                     526 	ld	(hl), a
+      000226 E1                     527 	pop	hl
+      000227 7C                     528 	ld	a, h
+      000228 F8 38                  529 	ldhl	sp,	#56
+      00022A 32                     530 	ld	(hl-), a
+      00022B 2A                     531 	ld	a, (hl+)
+      00022C 5F                     532 	ld	e, a
+      00022D 56                     533 	ld	d, (hl)
+      00022E 1A                     534 	ld	a, (de)
+      00022F 6F                     535 	ld	l, a
+                                    536 ;	spillPairReg hl
+                                    537 ;	spillPairReg hl
+      000230 13                     538 	inc	de
+      000231 1A                     539 	ld	a, (de)
+      000232 67                     540 	ld	h, a
+                                    541 ;	spillPairReg hl
+                                    542 ;	spillPairReg hl
+      000233 C5                     543 	push	bc
+      000234 CDr00r00               544 	call	___sdcc_call_hl
+      000237 C1                     545 	pop	bc
+      000238                        546 00102$:
+                                    547 ;main.c:78: wait_vbls_done(1);
+      000238 C5                     548 	push	bc
+      000239 3E 01                  549 	ld	a, #0x01
+      00023B F5                     550 	push	af
+      00023C 33                     551 	inc	sp
+      00023D CDr00r00               552 	call	_wait_vbls_done
+      000240 33                     553 	inc	sp
+      000241 C1                     554 	pop	bc
+      000242 C3rA1r01               555 	jp	00104$
+                                    556 ;main.c:80: }
+      000245 E8 3A                  557 	add	sp, #58
+      000247 C9                     558 	ret
+                                    559 	.area _CODE
+                                    560 	.area _INITIALIZER
+                                    561 	.area _CABS (ABS)
