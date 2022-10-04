@@ -3,26 +3,12 @@
 
 // ------------------------------------------------------------------------------------
 
-const uint8_t k_gridwalker_word_sprites[] =
-{
-	BASIC_FONT_G,
-	BASIC_FONT_R,
-	BASIC_FONT_I,
-	BASIC_FONT_D,
-	BASIC_FONT_W,
-	BASIC_FONT_A,
-	BASIC_FONT_L,
-	BASIC_FONT_K,
-	BASIC_FONT_E,
-	BASIC_FONT_R
-};
-
 const uint8_t k_new_game_word_sprites[] =
 {
 	BASIC_FONT_N,
 	BASIC_FONT_E,
 	BASIC_FONT_W,
-	BASIC_FONT_SKIP_CHARACTER,
+	BASIC_FONT_SPACE,
 	BASIC_FONT_G,
 	BASIC_FONT_A,
 	BASIC_FONT_M,
@@ -78,11 +64,6 @@ void draw_basic_font_word(
 	for (uint8_t i = 0; i < character_count; ++i)
 	{
 		uint8_t character = characters[i];
-
-		if (character == BASIC_FONT_SKIP_CHARACTER)
-		{
-			continue;
-		}
 
 		set_sprite_tile(tile_index_start + i, character);
 		move_sprite(

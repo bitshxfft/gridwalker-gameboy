@@ -1,8 +1,15 @@
 #include "game-state-title.h"
 #include <gb\gb.h>
+#include "sprites\basic-font-sprites.h"
+#include "sprites\title-background-sprites.h"
+#include "backgrounds\title-background-map.h"
 #include "basic-font-words.h"
 #include "constants.h"
 #include "game-state.h"
+
+// ------------------------------------------------------------------------------------
+
+void on_title_menu_selection_updated();
 
 // ------------------------------------------------------------------------------------
 
@@ -15,35 +22,24 @@ void title_enter()
 {
 	menu_selection = 0;
 
+	// load background data
+	set_bkg_data(0, 61, k_title_background_sprites);
+	set_bkg_tiles(0, 0, 20, 18, k_title_background_map);
+
 	// load font sprites
 	set_sprite_data(0, 38, basic_font_sprites);
 
-	// "GRIDWALKER"
-	draw_basic_font_word(&k_gridwalker_word_sprites[0],
-		10,
-		0,
-		SCREEN_MIN_X + (5 * SPRITE_TILE_WIDTH),
-		SCREEN_MIN_Y + (3 * SPRITE_TILE_HEIGHT),
-		SPRITE_TILE_WIDTH,
-		0);
-
-	// "NEW GAME"
-	draw_basic_font_word(&k_new_game_word_sprites[0],
+	// "CONTINUE"
+	draw_basic_font_word(&k_continue_word_sprites[0],
 		8,
-		10,
+		0,
 		SCREEN_MIN_X + (6 * SPRITE_TILE_WIDTH),
 		SCREEN_MIN_Y + (10 * SPRITE_TILE_HEIGHT),
 		SPRITE_TILE_WIDTH,
 		0);
 
-	// "CONTINUE"
-	draw_basic_font_word(&k_continue_word_sprites[0],
-		8,
-		18,
-		SCREEN_MIN_X + (6 * SPRITE_TILE_WIDTH),
-		SCREEN_MIN_Y + (12 * SPRITE_TILE_HEIGHT),
-		SPRITE_TILE_WIDTH,
-		0);
+	// "NEW GAME"
+	draw_basic_font_word(&k_new_game_word_sprites[0], 8, 8, 0, 0, 0, 0);
 }
 
 uint8_t title_update(struct input_state* input_state)
@@ -52,6 +48,7 @@ uint8_t title_update(struct input_state* input_state)
 		|| was_input_depressed(input_state, btn_down))
 	{
 		menu_selection ^= 0x01; // toggle between index 0 and 1
+		on_title_menu_selection_updated();
 	}
 
 	if (was_input_depressed(input_state, btn_start))
@@ -64,8 +61,49 @@ uint8_t title_update(struct input_state* input_state)
 
 void title_exit()
 {
-	for (int i = 0; i < 26; ++i)
+	for (int i = 0; i < 16; ++i)
 	{
 		move_sprite(i, 0, 0);
+	}
+}
+
+// ------------------------------------------------------------------------------------
+
+void on_title_menu_selection_updated()
+{
+	uint8_t i = 0;
+	uint8_t selected_x = SCREEN_MIN_X + (6 * SPRITE_TILE_WIDTH);
+
+	if (menu_selection == 0x00)
+	{
+		// move "CONTINUE" sprites off screen
+		for (i = 0; i < 8; ++i)
+		{
+			move_sprite(i, 0, 0);
+		}
+
+		// move "NEW GAME" sprites on screen
+		uint8_t y = SCREEN_MIN_Y + (12 * SPRITE_TILE_HEIGHT);
+		for (i = 8; i < 16; ++i)
+		{
+			move_sprite(i, selected_x, y);
+			selected_x += SPRITE_TILE_WIDTH;
+		}
+	}
+	else
+	{
+		// move "NEW GAME" sprites off screen
+		for (i = 8; i < 16; ++i)
+		{
+			move_sprite(i, 0, 0);
+		}
+
+		// move "CONTINUE" sprites on screen
+		uint8_t y = SCREEN_MIN_Y + (10 * SPRITE_TILE_HEIGHT);
+		for (i = 0; i < 8; ++i)
+		{
+			move_sprite(i, selected_x, y);
+			selected_x += SPRITE_TILE_WIDTH;
+		}
 	}
 }

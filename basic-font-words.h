@@ -1,7 +1,7 @@
 #ifndef __BASIC_FONT_WORDS_H__
 #define __BASIC_FONT_WORDS_H__
 
-#include "sprites/basic-font.h"
+#include "sprites/basic-font-sprites.h"
 
 // ------------------------------------------------------------------------------------
 

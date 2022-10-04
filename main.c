@@ -10,7 +10,6 @@
 #include "game-state-splash.h"
 #include "game-state-title.h"
 #include "input.h"
-#include "sprites/basic-font.h"
 #include "utility.h"
 
 // ------------------------------------------------------------------------------------
@@ -18,6 +17,7 @@
 int main()
 {
 	SHOW_SPRITES;
+	SHOW_BKG;
 	DISPLAY_ON;
 
 	struct input_state input_state;

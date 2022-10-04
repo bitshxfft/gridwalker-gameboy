@@ -46,8 +46,7 @@
 #define BASIC_FONT_PERIOD 36
 #define BASIC_FONT_EXCLAMATION 37
 #define BASIC_FONT_QUESTION 38
-
-#define BASIC_FONT_SKIP_CHARACTER 255
+#define BASIC_FONT_SPACE 39
 
 // ------------------------------------------------------------------------------------
 
