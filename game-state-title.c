@@ -14,7 +14,7 @@ void on_title_menu_selection_updated();
 // ------------------------------------------------------------------------------------
 
 uint8_t menu_selection = 0;
-uint8_t menu_options[2] = { gs_chapter_intro, gs_enter_password };
+uint8_t menu_options[2] = { gs_enter_password, gs_chapter_intro };
 
 // ------------------------------------------------------------------------------------
 
@@ -74,7 +74,7 @@ void on_title_menu_selection_updated()
 	uint8_t i = 0;
 	uint8_t selected_x = SCREEN_MIN_X + (6 * SPRITE_TILE_WIDTH);
 
-	if (menu_selection == 0x00)
+	if (menu_selection == 0x01)
 	{
 		// move "CONTINUE" sprites off screen
 		for (i = 0; i < 8; ++i)

@@ -1,40 +1,26 @@
 #include "game-state-password.h"
 #include <gb\gb.h>
-#include "basic-font-words.h"
-#include "constants.h"
+#include "sprites\password-background-sprites.h"
+#include "backgrounds\password-background-map.h"
 #include "game-state.h"
 
 // ------------------------------------------------------------------------------------
 
 void password_enter()
 {
-	// load font sprites
-	set_sprite_data(0, 38, basic_font_sprites);
-
-	// "GRIDWALKER"
-	draw_basic_font_word(&k_password_word_sprites[0],
-		8,
-		0,
-		SCREEN_MIN_X + (6 * SPRITE_TILE_WIDTH),
-		SCREEN_MIN_Y + (3 * SPRITE_TILE_HEIGHT),
-		SPRITE_TILE_WIDTH,
-		0);
+	// load background data
+	set_bkg_data(0, 66, k_password_background_sprites);
+	set_bkg_tiles(0, 0, 20, 18, k_password_background_map);
 }
 
 uint8_t password_update(struct input_state* input_state)
 {
-	if (was_input_depressed(input_state, btn_select))
-	{
-		return gs_title;
-	}
+	input_state;
 
 	return gs_enter_password;
 }
 
 void password_exit()
 {
-	for (int i = 0; i < 8; ++i)
-	{
-		move_sprite(i, 0, 0);
-	}
+	;
 }
