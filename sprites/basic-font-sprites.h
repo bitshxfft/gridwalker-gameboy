@@ -1,7 +1,7 @@
 // Created using Gameboy Tile Designer (GBTD) v2.2
 
-#ifndef __BASIC_FONT_H__
-#define __BASIC_FONT_H__
+#ifndef __BASIC_FONT_SPRITES_H__
+#define __BASIC_FONT_SPRITES_H__
 
 #include <stdint.h>
 
@@ -52,4 +52,4 @@
 
 extern const uint8_t basic_font_sprites[];
 
-#endif // __BASIC_FONT_H__
+#endif // __BASIC_FONT_SPRITES_H__
