@@ -9,10 +9,10 @@
 void chapter_intro_enter()
 {
 	// load font sprites
-	set_sprite_data(0, 38, basic_font_sprites);
+	set_sprite_data(0, 38, k_basic_font_sprites);
 
 	// "GRIDWALKER"
-	draw_basic_font_word(&k_chapter_word_sprites[0],
+	create_basic_font_word(&k_chapter_word_sprites[0],
 		7,
 		0,
 		SCREEN_MIN_X + (6 * SPRITE_TILE_WIDTH),

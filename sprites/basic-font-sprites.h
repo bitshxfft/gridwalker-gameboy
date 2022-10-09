@@ -50,6 +50,6 @@
 
 // ------------------------------------------------------------------------------------
 
-extern const uint8_t basic_font_sprites[];
+extern const uint8_t k_basic_font_sprites[];
 
 #endif // __BASIC_FONT_SPRITES_H__

@@ -5,7 +5,7 @@
 
 // ------------------------------------------------------------------------------------
 
-void draw_basic_font_word(
+void create_basic_font_word(
 	const uint8_t* characters,
 	uint8_t character_count,
 	uint8_t tile_index_start,

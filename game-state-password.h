@@ -2,6 +2,7 @@
 #define __GAME_STATE_PASSWORD_H__
 
 #include <stdint.h>
+#include "cursor.h"
 #include "input.h"
 
 // ------------------------------------------------------------------------------------

@@ -1,9 +1,11 @@
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\basic-font-sprites.o sprites\basic-font-sprites.c
+c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\cursor-sprites.o sprites\cursor-sprites.c
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\title-background-sprites.o sprites\title-background-sprites.c
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\title-background-map.o backgrounds\title-background-map.c
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\password-background-sprites.o sprites\password-background-sprites.c
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\password-background-map.o backgrounds\password-background-map.c
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\basic-font-words.o basic-font-words.c
+c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\cursor.o cursor.c
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\input.o input.c
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\game-state-splash.o game-state-splash.c
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\game-state-title.o game-state-title.c
@@ -15,11 +17,13 @@ c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\game-state-credits.o g
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\main.o main.c
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -o build\_gridwalker.gb^
   build\basic-font-sprites.o^
+  build\cursor-sprites.o^
   build\title-background-sprites.o^
   build\title-background-map.o^
   build\password-background-sprites.o^
   build\password-background-map.o^
   build\basic-font-words.o^
+  build\cursor.o^
   build\input.o^
   build\game-state-splash.o^
   build\game-state-title.o^

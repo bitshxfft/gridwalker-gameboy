@@ -27,10 +27,10 @@ void title_enter()
 	set_bkg_tiles(0, 0, 20, 18, k_title_background_map);
 
 	// load font sprites
-	set_sprite_data(0, 38, basic_font_sprites);
+	set_sprite_data(0, 38, k_basic_font_sprites);
 
 	// "CONTINUE"
-	draw_basic_font_word(&k_continue_word_sprites[0],
+	create_basic_font_word(&k_continue_word_sprites[0],
 		8,
 		0,
 		SCREEN_MIN_X + (6 * SPRITE_TILE_WIDTH),
@@ -39,7 +39,7 @@ void title_enter()
 		0);
 
 	// "NEW GAME"
-	draw_basic_font_word(&k_new_game_word_sprites[0], 8, 8, 0, 0, 0, 0);
+	create_basic_font_word(&k_new_game_word_sprites[0], 8, 8, 0, 0, 0, 0);
 }
 
 uint8_t title_update(struct input_state* input_state)
