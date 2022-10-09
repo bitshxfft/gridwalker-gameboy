@@ -1,5 +1,5 @@
-#include <gb/gb.h>
-#include "basic-font-words.h"
+#include <gb\gb.h>
+#include "sprites\gridwalker-sprites.h"
 #include "constants.h"
 #include "game-state.h"
 #include "game-state-chapter-intro.h"
@@ -16,10 +16,10 @@
 
 int main()
 {
-	SHOW_SPRITES;
-	SHOW_BKG;
-	DISPLAY_ON;
+	// load all sprites
+	set_sprite_data(0, 47, k_gridwalker_sprites);
 
+	// set-up input state
 	struct input_state input_state;
 	input_state.current_state = 0x00;
 	input_state.previous_state = 0x00;
@@ -27,6 +27,7 @@ int main()
 	input_state.held_buttons = 0x00;
 	input_state.released_buttons = 0x00;
 
+	// create array of state enter function pointers
 	void (*enter_state_funcs[7])() =
 	{
 		splash_enter,
@@ -38,6 +39,7 @@ int main()
 		credits_enter
 	};
 
+	// create array of state update function pointers
 	uint8_t (*update_state_funcs[7])(struct input_state*) =
 	{
 		splash_update,
@@ -49,6 +51,7 @@ int main()
 		credits_update
 	};
 
+	// create array of state exit function pointers
 	void (*exit_state_funcs[7])() =
 	{
 		splash_exit,
@@ -59,6 +62,10 @@ int main()
 		pause_exit,
 		credits_exit
 	};
+
+	SHOW_SPRITES;
+	SHOW_BKG;
+	DISPLAY_ON;
 
 	uint8_t game_state = gs_title;
 	(enter_state_funcs[game_state])();

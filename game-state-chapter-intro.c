@@ -8,10 +8,7 @@
 
 void chapter_intro_enter()
 {
-	// load font sprites
-	set_sprite_data(0, 38, k_basic_font_sprites);
-
-	// "GRIDWALKER"
+	// "CHAPTER"
 	create_basic_font_word(&k_chapter_word_sprites[0],
 		7,
 		0,
@@ -23,9 +20,9 @@ void chapter_intro_enter()
 
 uint8_t chapter_intro_update(struct input_state* input_state)
 {
-	if (was_input_depressed(input_state, btn_select))
+	if (was_input_depressed(input_state, btn_a))
 	{
-		return gs_title;
+		return gs_game;
 	}
 
 	return gs_chapter_intro;

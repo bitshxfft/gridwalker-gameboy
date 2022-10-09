@@ -1,6 +1,6 @@
 #include "cursor.h"
 #include <gb\gb.h>
-#include "sprites/cursor-sprites.h"
+#include "sprites\gridwalker-sprites.h"
 
 // ------------------------------------------------------------------------------------
 
@@ -19,8 +19,7 @@ void create_cursor(
 	{
 		case cursor_single_piece:
 		{
-			set_sprite_data(2, 1, k_cursor_sprites);
-			set_sprite_tile(tile_index_start, 0);
+			set_sprite_tile(tile_index_start, SPRITE_CURSOR_SINGLE_PIECE_INDEX);
 			cursor->size_x = 8;
 			cursor->size_y = 8;
 			cursor->start_sprite_index = tile_index_start;
@@ -30,9 +29,8 @@ void create_cursor(
 
 		case cursor_two_piece:
 		{
-			set_sprite_data(0, 2, k_cursor_sprites);
-			set_sprite_tile(tile_index_start, 0);
-			set_sprite_tile(tile_index_start + 1, 0);
+			set_sprite_tile(tile_index_start, SPRITE_CURSOR_TWO_PIECE_START_INDEX);
+			set_sprite_tile(tile_index_start + 1, SPRITE_CURSOR_TWO_PIECE_END_INDEX);
 			cursor->size_x = size_x;
 			cursor->size_y = 8;
 			cursor->start_sprite_index = tile_index_start;
@@ -42,11 +40,10 @@ void create_cursor(
 
 		case cursor_four_piece:
 		{
-			set_sprite_data(3, 4, k_cursor_sprites);
-			for (uint8_t i = 0; i < 4; ++i)
-			{
-				set_sprite_tile(tile_index_start + i, i);
-			}
+			set_sprite_tile(tile_index_start, SPRITE_CURSOR_FOUR_PIECE_START_INDEX);
+			set_sprite_tile(tile_index_start + 1, SPRITE_CURSOR_FOUR_PIECE_START_INDEX + 1);
+			set_sprite_tile(tile_index_start + 2, SPRITE_CURSOR_FOUR_PIECE_START_INDEX + 2);
+			set_sprite_tile(tile_index_start + 3, SPRITE_CURSOR_FOUR_PIECE_START_INDEX + 3);
 
 			cursor->size_x = size_x;
 			cursor->size_y = size_y;
@@ -77,14 +74,14 @@ void move_cursor(struct cursor* cursor, uint8_t position_x, uint8_t position_y)
 			// left
 			move_sprite(cursor->start_sprite_index, position_x, position_y);
 			// right
-			move_sprite(cursor->start_sprite_index + 1, (position_x + cursor->size_x) - 3, position_y);
+			move_sprite(cursor->start_sprite_index + 1, (position_x + cursor->size_x) - 8, position_y);
 			break;
 		}
 
 		case cursor_four_piece:
 		{
-			uint8_t max_x = (position_x + cursor->size_x) - 5;
-			uint8_t max_y = (position_y + cursor->size_y) - 5;
+			uint8_t max_x = (position_x + cursor->size_x) - 8;
+			uint8_t max_y = (position_y + cursor->size_y) - 8;
 
 			// bottom left
 			move_sprite(cursor->start_sprite_index, position_x, max_y);

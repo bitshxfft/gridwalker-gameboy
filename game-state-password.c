@@ -19,12 +19,15 @@ void password_enter()
 
 	// create cursor
 	struct cursor cursor;
-	create_cursor(&cursor, cursor_single_piece, 0, 10, 18, 8, 8);
+	create_cursor(&cursor, cursor_four_piece, 0, 10, 18, 10, 10);
 }
 
 uint8_t password_update(struct input_state* input_state)
 {
-	input_state;
+	if (was_input_depressed(input_state, btn_b))
+	{
+		return gs_title;
+	}
 
 	return gs_enter_password;
 }

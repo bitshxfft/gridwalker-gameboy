@@ -1,7 +1,15 @@
 #ifndef __BASIC_FONT_WORDS_H__
 #define __BASIC_FONT_WORDS_H__
 
-#include "sprites/basic-font-sprites.h"
+#include "sprites\gridwalker-sprites.h"
+
+// ------------------------------------------------------------------------------------
+
+extern const uint8_t k_gridwalker_word_sprites[];
+extern const uint8_t k_new_game_word_sprites[];
+extern const uint8_t k_continue_word_sprites[];
+extern const uint8_t k_password_word_sprites[];
+extern const uint8_t k_chapter_word_sprites[];
 
 // ------------------------------------------------------------------------------------
 
@@ -13,13 +21,5 @@ void create_basic_font_word(
 	uint8_t start_position_y,
 	uint8_t position_step_x,
 	uint8_t position_step_y);
-
-// ------------------------------------------------------------------------------------
-
-extern const uint8_t k_gridwalker_word_sprites[];
-extern const uint8_t k_new_game_word_sprites[];
-extern const uint8_t k_continue_word_sprites[];
-extern const uint8_t k_password_word_sprites[];
-extern const uint8_t k_chapter_word_sprites[];
 
 #endif // __BASIC_FONT_WORDS_H__

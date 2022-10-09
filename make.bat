@@ -1,5 +1,4 @@
-c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\basic-font-sprites.o sprites\basic-font-sprites.c
-c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\cursor-sprites.o sprites\cursor-sprites.c
+c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\gridwalker-sprites.o sprites\gridwalker-sprites.c
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\title-background-sprites.o sprites\title-background-sprites.c
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\title-background-map.o backgrounds\title-background-map.c
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\password-background-sprites.o sprites\password-background-sprites.c
@@ -16,8 +15,7 @@ c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\game-state-pause.o gam
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\game-state-credits.o game-state-credits.c
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -c -o build\main.o main.c
 c:\gameboy-dev\gbdk\bin\lcc -Wa-l -Wl-m -Wl-j -o build\_gridwalker.gb^
-  build\basic-font-sprites.o^
-  build\cursor-sprites.o^
+  build\gridwalker-sprites.o^
   build\title-background-sprites.o^
   build\title-background-map.o^
   build\password-background-sprites.o^

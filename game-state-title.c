@@ -1,6 +1,6 @@
 #include "game-state-title.h"
 #include <gb\gb.h>
-#include "sprites\basic-font-sprites.h"
+#include "sprites\gridwalker-sprites.h"
 #include "sprites\title-background-sprites.h"
 #include "backgrounds\title-background-map.h"
 #include "basic-font-words.h"
@@ -26,9 +26,6 @@ void title_enter()
 	set_bkg_data(0, 61, k_title_background_sprites);
 	set_bkg_tiles(0, 0, 20, 18, k_title_background_map);
 
-	// load font sprites
-	set_sprite_data(0, 38, k_basic_font_sprites);
-
 	// "CONTINUE"
 	create_basic_font_word(&k_continue_word_sprites[0],
 		8,
@@ -51,9 +48,14 @@ uint8_t title_update(struct input_state* input_state)
 		on_title_menu_selection_updated();
 	}
 
-	if (was_input_depressed(input_state, btn_start))
+	if (was_input_depressed(input_state, btn_a))
 	{
 		return menu_options[menu_selection];
+	}
+
+	if (was_input_depressed(input_state, btn_b))
+	{
+		return gs_title;
 	}
 
 	return gs_title;
